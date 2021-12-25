@@ -1,3 +1,3 @@
-flutter build web --base-href="/grouploan/"
+call .\build.bat
 mkdir .\docs
-xcopy /E /I build\web .\docs
+xcopy /E /I /y build\web .\docs
