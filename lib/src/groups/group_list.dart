@@ -286,8 +286,8 @@ class _GroupListState extends State<GroupList> {
       builder: (_) {
         return AlertDialog(
           title: const Text('Delete Group'),
-          content: const Text(
-            'Are you sure you want to delete this group?',
+          content: Text(
+            'Are you sure you want to delete this group: "${group.name}"?',
           ),
           actions: <Widget>[
             TextButton(
