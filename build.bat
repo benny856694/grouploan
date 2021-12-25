@@ -1,1 +1,0 @@
-flutter build web --base-href="/grouploan/"
