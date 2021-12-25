@@ -1,0 +1,3 @@
+flutter build web --base-href="/grouploan/"
+mkdir ./docs
+cp -R -v -f build/web ./docs
