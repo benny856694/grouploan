@@ -1,0 +1,26 @@
+**APPLY FOR LOAN**
+ - Loan ID
+ -Customer ID (pull the  customer info: Customer Name, -Customer Telephone)
+ - Group
+ - Loan Amount
+ - Loan Interest (in Percentage)
+ - Credit and Savings Interest (in Percentage)
+ - Total Amount (Loan Amount + Loan Interest + Credit and Savings Interest)
+ - Date of Application
+ - Date of Loan Disbursed
+ - Repayment Period (16 Weeks /10 Weeks)
+ - Grace Period  In Days (14 days by default)
+ - Membership Registration Fee (Amount)
+ - Added By (Currently Logged In user)
+ - Loan Status (Pending, Approved, Rejected)
+ - Action By (Supervisor)
+
+
+
+
+**Note:REPAYMENT PERIOD**
+ - 16 weeks - Once Every Week for 4weeks in a month X 4months
+ - 10 Weeks - Once Every 2weeks in a month  X 5months
+
+
+

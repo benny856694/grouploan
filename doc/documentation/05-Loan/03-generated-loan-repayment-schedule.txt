@@ -1,0 +1,29 @@
+**REPAYMENT SCHEDULE**
+- Loan ID
+- Payment Date
+- Customer ID
+- Customer Name
+- Customer Telephone
+- Group Account Number
+- Group ID
+- Group Name
+- Amount To Be Paid
+- Date To Be Paid
+- Amount Paid
+- Date Paid
+- Received By (currently logged in User)
+- Balance
+- Payment Status (Paid, Not Paid, Partial)
+- Payment Approved (Yes or No)
+- Approved By (Supervisor)
+
+
+
+Note:  The last day should be less than the rest.
+
+for Example: A user borrows 10 GHC and is suppose to pay back in 10 days.
+The last day will be -50% or more depending on the settings so hence.
+
+9.50 will be divided in 9 days
+remaining: 0.50 will be paid on the last day.
+

@@ -1,0 +1,24 @@
+**Customers**
+- Customer ID (auto-generated Numbers Only TimeStamp will be OK)
+ - Name of Customer
+ - Verification Type (Voters ID, Ghana Card)
+ - Identification Number
+
+ - Home Location Latitude
+ - Home Location Longitude
+  - Business Location Latitude
+  - Business Location Longitude
+ -Telephone Number
+ -Next of kin (Name)
+ -Next of Kin Telephone
+ - Next of Kin Location Latitude
+ - Next of Kin Location Longitude
+ - Pictures 3 Pictures
+
+          a.Front View ,
+          b.Back View
+          c.Person Holding the ID Card
+- Added By (currently logged in User)
+
+ - Approval Status ( Pending, Approved, Rejected)
+ -Approved By (Current Logged In Staff)

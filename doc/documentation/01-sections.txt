@@ -1,0 +1,6 @@
+Staff
+Groups
+Customers
+Loans
+Savings & Withdrawals
+Settings

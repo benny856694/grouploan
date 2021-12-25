@@ -1,0 +1,22 @@
+**Summary**
+- Loan ID
+- Loan Date
+- Date of Disbursal
+- Loan Start Date
+- End of Loan Date
+- Group Account Number
+- Customer Name
+- Customer Telephone
+- Group ID
+- Group Name
+- Amount To Be Paid
+- Amount Paid
+- Balance
+- Payment Status (Paid, Not Paid, Partial)
+-Loan Status (Pending, Approved, Rejected)
+- Approved By (Supervisor)
+
+
+NOTE:
+**approved for everybody in the group**
+

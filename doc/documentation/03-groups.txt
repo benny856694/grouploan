@@ -1,0 +1,6 @@
+**GROUP**
+ - Account Number
+  - Group Name (unique Name)
+ - Date of Registration
+ - Group Leader
+ - Group Leader Telephone

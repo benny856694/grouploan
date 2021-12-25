@@ -1,0 +1,16 @@
+**LOAN Entry By GROUP (Summary)**
+- Loan ID
+- Group ID
+- Group Name
+- Group Leader
+- Group Leader Telephone
+- Total Number of Members
+- Total Loan Amount
+- Amount Paid
+- Balance
+- Payment Status (Full Payment, Partial, Not Paid )
+- Loan Status (Pending, Approved, Rejected )
+
+
+NOTE:
+On Approved, approves for everyone in the group

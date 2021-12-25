@@ -1,0 +1,12 @@
+Percentage Amount To be Deducted for the Last Payment Round (%)
+Grace Period (Default Value)
+Membership Fee (Default Value)
+Credit and Savings Interest (Default Value)
+SMS Notifications
+- On Customer Added
+- On Loan Approved
+- On Loan Rejected
+- On Group Added
+- On Loan Paid
+
+

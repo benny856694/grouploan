@@ -1,0 +1,22 @@
+**SAVINGS AND WITHDRAWALS**
+
+*SUMMARY*
+- Customer ID(auto-generated-numbers)
+- Customer Name
+- Customer Telephone
+- Total Amount Deposited
+- Total Amount Withdrawn
+- Balance
+
+
+
+
+*Savings and Withdrawal Log*
+- Customer ID
+- Customer Name
+- Customer Telephone
+- Type (Savings /Withdrawal)
+- Amount
+- Transacted By
+- Approved (Yes or No)
+- Approved By (Staff)

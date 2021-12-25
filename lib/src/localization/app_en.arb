@@ -1,0 +1,6 @@
+{
+  "appTitle": "group_loan",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}

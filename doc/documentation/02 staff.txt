@@ -1,0 +1,10 @@
+**Staff Information**
+ -Staff name
+ -Username
+ -Password
+ -Telephone Number
+ -Role (Staff, Supervisor)
+
+
+
+
