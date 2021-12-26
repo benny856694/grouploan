@@ -4,6 +4,7 @@ import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:intl/intl.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupList extends StatefulWidget {
   const GroupList({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class GroupList extends StatefulWidget {
 }
 
 class _GroupListState extends State<GroupList> {
+  final firestore = FirebaseFirestore.instance;
   Widget _buildGroupDialog(
     BuildContext context, {
     Group? group,
@@ -110,8 +112,20 @@ class _GroupListState extends State<GroupList> {
                 leaderName: leaderNameEditController.text,
                 phoneNumber: phoneNumberEditController.text,
               );
-              appState.addGroup(group);
-              Navigator.of(context).pop();
+              //appState.addGroup(group);
+              firestore.collection('groups').add(group.toMap()).then((value) {
+                group.id = value.id;
+                appState.addGroup(group);
+                Navigator.of(context).pop();
+              }).catchError((error) {
+                RM.scaffold.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      error.toString(),
+                    ),
+                  ),
+                );
+              });
             },
           ),
         if (!isEdit)
