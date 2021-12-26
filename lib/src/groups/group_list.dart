@@ -23,12 +23,22 @@ class _GroupListState extends State<GroupList> {
   var isEdit = false;
 
   final firestore = FirebaseFirestore.instance;
+
+  void clear() {
+    nameEditController.clear();
+    accountNumberEditController.clear();
+    leaderNameEditController.clear();
+    phoneNumberEditController.clear();
+  }
+
   Widget _buildGroupDialog(
     BuildContext context, {
     Group? group,
   }) {
+    clear();
     isEdit = group != null;
     registrationDate = group?.registrationDate ?? DateTime.now();
+
     if (isEdit) {
       nameEditController.text = group!.name;
       accountNumberEditController.text = group.accountNumber;
@@ -38,13 +48,6 @@ class _GroupListState extends State<GroupList> {
       if (group.phoneNumber != null) {
         phoneNumberEditController.text = group.phoneNumber!;
       }
-    }
-
-    void clear() {
-      nameEditController.clear();
-      accountNumberEditController.clear();
-      leaderNameEditController.clear();
-      phoneNumberEditController.clear();
     }
 
     return AlertDialog(
@@ -123,7 +126,6 @@ class _GroupListState extends State<GroupList> {
             onPressed: () async {
               var group = _getGroup();
               await appState.addGroup(group);
-              clear();
               Navigator.of(context).pop();
             },
           ),
@@ -134,6 +136,7 @@ class _GroupListState extends State<GroupList> {
               var group = _getGroup();
               await appState.addGroup(group);
               clear();
+              nameFocusNode.requestFocus();
             },
           ),
         TextButton(
