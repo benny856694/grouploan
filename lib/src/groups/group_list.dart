@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:group_loan/main.dart';
@@ -46,8 +48,26 @@ class _GroupListState extends State<GroupList> {
     }
 
     return AlertDialog(
-      title: Text(
-        isEdit ? 'Edit Group' : 'Add Group',
+      title: Row(
+        children: [
+          Text(
+            isEdit ? 'Edit Group' : 'Add Group',
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          OnReactive(() {
+            if (appState.groups.isWaiting) {
+              return const SizedBox.square(
+                dimension: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          })
+        ],
       ),
       content: SizedBox(
         width: 400,
@@ -99,11 +119,8 @@ class _GroupListState extends State<GroupList> {
       ),
       actions: <Widget>[
         if (!isEdit)
-          TextButton(
-            child: const Text(
-              'Create',
-            ),
-            onPressed: () {
+          _buildCreateButton(
+            onPressed: () async {
               var group = Group(
                 "id",
                 nameEditController.text,
@@ -112,28 +129,14 @@ class _GroupListState extends State<GroupList> {
                 leaderName: leaderNameEditController.text,
                 phoneNumber: phoneNumberEditController.text,
               );
-              //appState.addGroup(group);
-              firestore.collection('groups').add(group.toMap()).then((value) {
-                group.id = value.id;
-                appState.addGroup(group);
-                Navigator.of(context).pop();
-              }).catchError((error) {
-                RM.scaffold.showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      error.toString(),
-                    ),
-                  ),
-                );
-              });
+              await appState.addGroup(group);
+              Navigator.of(context).pop();
             },
           ),
         if (!isEdit)
-          TextButton(
-            child: const Text(
-              'Create & More',
-            ),
-            onPressed: () {
+          _buildCreateButton(
+            isCreateMore: true,
+            onPressed: () async {
               var group = Group(
                 "id",
                 nameEditController.text,
@@ -142,9 +145,8 @@ class _GroupListState extends State<GroupList> {
                 leaderName: leaderNameEditController.text,
                 phoneNumber: phoneNumberEditController.text,
               );
-              appState.addGroup(group);
+              await appState.addGroup(group);
               clear();
-              nameFocusNode.requestFocus();
             },
           ),
         TextButton(
@@ -170,6 +172,37 @@ class _GroupListState extends State<GroupList> {
           ),
       ],
     );
+  }
+
+  Widget _buildCreateButton({
+    bool isCreateMore = false,
+    void Function()? onPressed,
+    void Function()? postAction,
+  }) {
+    return TextButton(
+      onPressed: () {
+        try {
+          onPressed?.call();
+          postAction?.call();
+        } catch (e) {
+          RM.scaffold.showSnackBar(
+            SnackBar(
+              content: Text(e.toString()),
+            ),
+          );
+        }
+      },
+      child: Text(
+        isCreateMore ? 'Create & More' : 'Create',
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    appState.loadGroups();
   }
 
   @override
