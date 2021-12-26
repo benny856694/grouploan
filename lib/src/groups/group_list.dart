@@ -14,21 +14,23 @@ class GroupList extends StatefulWidget {
 }
 
 class _GroupListState extends State<GroupList> {
+  var nameEditController = TextEditingController();
+  var phoneNumberEditController = TextEditingController();
+  var leaderNameEditController = TextEditingController();
+  var accountNumberEditController = TextEditingController();
+  DateTime? registrationDate = DateTime.now();
+  var nameFocusNode = FocusNode();
+  var isEdit = false;
+
   final firestore = FirebaseFirestore.instance;
   Widget _buildGroupDialog(
     BuildContext context, {
     Group? group,
   }) {
-    var nameEditController = TextEditingController();
-    var phoneNumberEditController = TextEditingController();
-    var leaderNameEditController = TextEditingController();
-    var accountNumberEditController = TextEditingController();
-    DateTime? registrationDate = group?.registrationDate ?? DateTime.now();
-    var nameFocusNode = FocusNode();
-    var isEdit = group != null;
-
+    isEdit = group != null;
+    registrationDate = group?.registrationDate ?? DateTime.now();
     if (isEdit) {
-      nameEditController.text = group.name;
+      nameEditController.text = group!.name;
       accountNumberEditController.text = group.accountNumber;
       if (group.leaderName != null) {
         leaderNameEditController.text = group.leaderName!;
@@ -119,15 +121,9 @@ class _GroupListState extends State<GroupList> {
         if (!isEdit)
           _buildCreateButton(
             onPressed: () async {
-              var group = Group(
-                "id",
-                nameEditController.text,
-                accountNumberEditController.text,
-                registrationDate: registrationDate,
-                leaderName: leaderNameEditController.text,
-                phoneNumber: phoneNumberEditController.text,
-              );
+              var group = _getGroup();
               await appState.addGroup(group);
+              clear();
               Navigator.of(context).pop();
             },
           ),
@@ -135,14 +131,7 @@ class _GroupListState extends State<GroupList> {
           _buildCreateButton(
             isCreateMore: true,
             onPressed: () async {
-              var group = Group(
-                "id",
-                nameEditController.text,
-                accountNumberEditController.text,
-                registrationDate: registrationDate,
-                leaderName: leaderNameEditController.text,
-                phoneNumber: phoneNumberEditController.text,
-              );
+              var group = _getGroup();
               await appState.addGroup(group);
               clear();
             },
@@ -150,13 +139,10 @@ class _GroupListState extends State<GroupList> {
         TextButton(
           child: Text(!isEdit ? 'Cancel' : 'OK'),
           onPressed: () {
+            var g = _getGroup();
             if (group != null) {
-              group.name = nameEditController.text;
-              group.accountNumber = accountNumberEditController.text;
-              group.leaderName = leaderNameEditController.text;
-              group.phoneNumber = phoneNumberEditController.text;
-              group.registrationDate = registrationDate;
-              appState.updateGroup(group);
+              g.id = group.id;
+              appState.updateGroup(g);
             }
             Navigator.of(context).pop();
           },
@@ -169,6 +155,17 @@ class _GroupListState extends State<GroupList> {
             },
           ),
       ],
+    );
+  }
+
+  Group _getGroup() {
+    return Group(
+      "",
+      nameEditController.text,
+      accountNumberEditController.text,
+      registrationDate: registrationDate ?? DateTime.now(),
+      leaderName: leaderNameEditController.text,
+      phoneNumber: phoneNumberEditController.text,
     );
   }
 
