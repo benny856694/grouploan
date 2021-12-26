@@ -211,17 +211,35 @@ class _GroupListState extends State<GroupList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ElevatedButton.icon(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) {
-                return _buildGroupDialog(context);
+        Row(
+          children: [
+            ElevatedButton.icon(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) {
+                    return _buildGroupDialog(context);
+                  },
+                );
               },
-            );
-          },
-          label: const Text('Create Group'),
-          icon: const Icon(Icons.add),
+              label: const Text('Create Group'),
+              icon: const Icon(Icons.add),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            OnReactive(
+              () => appState.groups.onOrElse(
+                onWaiting: () => const SizedBox.square(
+                  dimension: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                ),
+                orElse: (s) => const SizedBox.shrink(),
+              ),
+            ),
+          ],
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -339,15 +357,15 @@ class _GroupListState extends State<GroupList> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Delete'),
               onPressed: () {
+                appState.removeGroup(group);
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Delete'),
+              child: const Text('Cancel'),
               onPressed: () {
-                appState.removeGroup(group);
                 Navigator.of(context).pop();
               },
             ),
