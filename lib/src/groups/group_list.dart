@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:group_loan/main.dart';
@@ -179,28 +177,31 @@ class _GroupListState extends State<GroupList> {
     void Function()? onPressed,
     void Function()? postAction,
   }) {
-    return TextButton(
-      onPressed: () {
-        try {
-          onPressed?.call();
-          postAction?.call();
-        } catch (e) {
-          RM.scaffold.showSnackBar(
-            SnackBar(
-              content: Text(e.toString()),
-            ),
-          );
-        }
-      },
-      child: Text(
-        isCreateMore ? 'Create & More' : 'Create',
+    return OnReactive(
+      () => TextButton(
+        onPressed: appState.groups.isWaiting
+            ? null
+            : () {
+                try {
+                  onPressed?.call();
+                  postAction?.call();
+                } catch (e) {
+                  RM.scaffold.showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString()),
+                    ),
+                  );
+                }
+              },
+        child: Text(
+          isCreateMore ? 'Create & More' : 'Create',
+        ),
       ),
     );
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     appState.loadGroups();
   }
