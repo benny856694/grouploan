@@ -1,10 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class AppState {
   late final CollectionReference<Map<String, dynamic>> groupsRef;
-  final groups = <Group>[].inj();
+  final groups = RM.inject<List<Group>>(
+    () => [],
+    sideEffects: SideEffects.onAll(
+      onData: null,
+      onWaiting: null,
+      onError: (error, _) {
+        RM.scaffold.showSnackBar(
+          SnackBar(
+            content: Text(
+              error.toString(),
+            ),
+          ),
+        );
+      },
+    ),
+  );
   final counter = 0.inj();
 
   AppState() : groupsRef = FirebaseFirestore.instance.collection('groups');

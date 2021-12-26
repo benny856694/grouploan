@@ -126,7 +126,9 @@ class _GroupListState extends State<GroupList> {
             onPressed: () async {
               var group = _getGroup();
               await appState.addGroup(group);
-              Navigator.of(context).pop();
+              if (!appState.groups.hasError) {
+                Navigator.pop(context);
+              }
             },
           ),
         if (!isEdit)
@@ -135,8 +137,10 @@ class _GroupListState extends State<GroupList> {
             onPressed: () async {
               var group = _getGroup();
               await appState.addGroup(group);
-              clear();
-              nameFocusNode.requestFocus();
+              if (!appState.groups.hasError) {
+                clear();
+                nameFocusNode.requestFocus();
+              }
             },
           ),
         TextButton(
@@ -216,6 +220,7 @@ class _GroupListState extends State<GroupList> {
             ElevatedButton.icon(
               onPressed: () {
                 showDialog(
+                  barrierDismissible: false,
                   context: context,
                   builder: (_) {
                     return _buildGroupDialog(context);
