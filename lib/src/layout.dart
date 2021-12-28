@@ -15,7 +15,6 @@ abstract class Layout extends StatelessWidget {
     return Row(
       children: [
         Container(
-          color: Theme.of(context).drawerTheme.backgroundColor,
           padding: const EdgeInsets.all(8),
           child: IntrinsicWidth(
             child: Column(
