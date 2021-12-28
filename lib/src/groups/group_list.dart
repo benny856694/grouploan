@@ -186,7 +186,7 @@ class _GroupListState extends State<GroupList> {
                       icon: const Icon(Icons.map),
                       onPressed: () async {
                         var url =
-                            'https://maps.google.com/maps?ll=${latitudeEditController.text},${longitudeEditController.text}';
+                            'https://www.google.com/maps/search/?api=1&query=${latitudeEditController.text},${longitudeEditController.text}';
                         await launch(url);
                       },
                     ),
@@ -411,7 +411,7 @@ class _GroupListState extends State<GroupList> {
                                 icon: const Icon(Icons.map),
                                 onPressed: () async {
                                   var url =
-                                      'https://maps.google.com/maps?ll=${group.latitude},${group.longitude}';
+                                      'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
                                   await launch(url);
                                 },
                               ),
