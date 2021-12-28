@@ -16,10 +16,12 @@ abstract class Layout extends StatelessWidget {
       children: [
         Container(
           color: Theme.of(context).drawerTheme.backgroundColor,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: navMenus,
+          padding: const EdgeInsets.all(8),
+          child: IntrinsicWidth(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: navMenus,
+            ),
           ),
         ),
         Expanded(

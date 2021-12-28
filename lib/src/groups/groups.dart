@@ -12,5 +12,8 @@ class Groups extends Layout {
   Widget buildMainContent(BuildContext context) => const GroupList();
 
   @override
-  List<Widget> buildNavMenus(BuildContext context) => createNavMenus(context);
+  List<Widget> buildNavMenus(BuildContext context) => createNavMenus(
+        context,
+        selectedButton: 'Groups',
+      );
 }

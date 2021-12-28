@@ -4,22 +4,41 @@ Widget createTextButton(
   BuildContext context,
   String text,
   IconData icon,
-  VoidCallback onPressed,
-) {
-  return SizedBox(
-    height: 40,
-    child: TextButton.icon(
-      label: Text(
-        text,
-        style: Theme.of(context).textTheme.headline6,
+  VoidCallback onPressed, {
+  bool isSelected = false,
+}) {
+  return InkWell(
+    onTap: onPressed,
+    child: Container(
+      color: isSelected ? Theme.of(context).highlightColor : null,
+      padding: const EdgeInsets.all(
+        8.0,
       ),
-      icon: Icon(icon),
-      onPressed: onPressed,
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: isSelected
+                ? Theme.of(context).buttonTheme.colorScheme?.primary
+                : null,
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.button,
+          ),
+        ],
+      ),
     ),
   );
 }
 
-List<Widget> createNavMenus(BuildContext context) {
+List<Widget> createNavMenus(
+  BuildContext context, {
+  String? selectedButton,
+}) {
   return [
     createTextButton(
       context,
@@ -28,6 +47,7 @@ List<Widget> createNavMenus(BuildContext context) {
       () {
         Navigator.pushNamed(context, '/staffs');
       },
+      isSelected: selectedButton == 'Staff',
     ),
     createTextButton(
       context,
@@ -36,24 +56,28 @@ List<Widget> createNavMenus(BuildContext context) {
       () {
         Navigator.pushNamed(context, '/groups');
       },
+      isSelected: selectedButton == 'Groups',
     ),
     createTextButton(
       context,
       'Home',
       Icons.home,
       () {},
+      isSelected: selectedButton == 'Home',
     ),
     createTextButton(
       context,
       'Profile',
       Icons.person,
       () {},
+      isSelected: selectedButton == 'Profile',
     ),
     createTextButton(
       context,
       'Settings',
       Icons.settings,
       () {},
+      isSelected: selectedButton == 'Settings',
     ),
   ];
 }
