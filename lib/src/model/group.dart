@@ -1,21 +1,25 @@
 import 'dart:convert';
 
 class Group {
-  String id;
-  String name;
-  String accountNumber;
+  String id = '';
+  String name = '';
+  String accountNumber = '';
   String? description;
   String? phoneNumber;
   DateTime? registrationDate;
   String? leaderName;
-  Group(
-    this.id,
-    this.name,
-    this.accountNumber, {
+  double? latitude;
+  double? longitude;
+  Group({
+    required this.id,
+    required this.name,
+    required this.accountNumber,
     this.description,
     this.phoneNumber,
     this.registrationDate,
     this.leaderName,
+    this.latitude,
+    this.longitude,
   });
 
   Group copyWith({
@@ -26,15 +30,19 @@ class Group {
     String? phoneNumber,
     DateTime? registrationDate,
     String? leaderName,
+    double? latitude,
+    double? longitude,
   }) {
     return Group(
-      id ?? this.id,
-      name ?? this.name,
-      accountNumber ?? this.accountNumber,
-      description:  description ?? this.description,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      accountNumber: accountNumber ?? this.accountNumber,
+      description: description ?? this.description,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       registrationDate: registrationDate ?? this.registrationDate,
       leaderName: leaderName ?? this.leaderName,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 
@@ -47,20 +55,24 @@ class Group {
       'phoneNumber': phoneNumber,
       'registrationDate': registrationDate?.millisecondsSinceEpoch,
       'leaderName': leaderName,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
   factory Group.fromMap(Map<String, dynamic> map) {
     return Group(
-      map['id'] ?? '',
-      map['name'] ?? '',
-      map['accountNumber'] ?? '',
+      id: map['id'] ?? '',
+      name: map['name'] ?? '',
+      accountNumber: map['accountNumber'] ?? '',
       description: map['description'],
       phoneNumber: map['phoneNumber'],
       registrationDate: map['registrationDate'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['registrationDate'])
           : null,
       leaderName: map['leaderName'],
+      latitude: map['latitude']?.toDouble(),
+      longitude: map['longitude']?.toDouble(),
     );
   }
 
@@ -70,7 +82,7 @@ class Group {
 
   @override
   String toString() {
-    return 'Group(id: $id, name: $name, accountNumber: $accountNumber, description: $description, phoneNumber: $phoneNumber, registrationDate: $registrationDate, leaderName: $leaderName)';
+    return 'Group(id: $id, name: $name, accountNumber: $accountNumber, description: $description, phoneNumber: $phoneNumber, registrationDate: $registrationDate, leaderName: $leaderName, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -84,7 +96,9 @@ class Group {
         other.description == description &&
         other.phoneNumber == phoneNumber &&
         other.registrationDate == registrationDate &&
-        other.leaderName == leaderName;
+        other.leaderName == leaderName &&
+        other.latitude == latitude &&
+        other.longitude == longitude;
   }
 
   @override
@@ -95,6 +109,8 @@ class Group {
         description.hashCode ^
         phoneNumber.hashCode ^
         registrationDate.hashCode ^
-        leaderName.hashCode;
+        leaderName.hashCode ^
+        latitude.hashCode ^
+        longitude.hashCode;
   }
 }

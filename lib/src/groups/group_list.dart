@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupList extends StatefulWidget {
   const GroupList({Key? key}) : super(key: key);
-
   @override
   _GroupListState createState() => _GroupListState();
 }
@@ -18,17 +17,23 @@ class _GroupListState extends State<GroupList> {
   var phoneNumberEditController = TextEditingController();
   var leaderNameEditController = TextEditingController();
   var accountNumberEditController = TextEditingController();
+  var longitudeEditController = TextEditingController();
+  var latitudeEditController = TextEditingController();
   DateTime? registrationDate = DateTime.now();
   var nameFocusNode = FocusNode();
   var isEdit = false;
-
-  final firestore = FirebaseFirestore.instance;
+  var _isGettingLocation = false;
+  LocationData? _locationData;
 
   void clear() {
     nameEditController.clear();
     accountNumberEditController.clear();
     leaderNameEditController.clear();
     phoneNumberEditController.clear();
+    latitudeEditController.clear();
+    longitudeEditController.clear();
+    _locationData = null;
+    _isGettingLocation = false;
   }
 
   Widget _buildGroupDialog(
@@ -48,131 +53,215 @@ class _GroupListState extends State<GroupList> {
       if (group.phoneNumber != null) {
         phoneNumberEditController.text = group.phoneNumber!;
       }
+      if (group.latitude != null) {
+        latitudeEditController.text = group.latitude.toString();
+      }
+      if (group.longitude != null) {
+        longitudeEditController.text = group.longitude.toString();
+      }
     }
 
-    return AlertDialog(
-      title: Row(
-        children: [
-          Text(
-            isEdit ? 'Edit Group' : 'Add Group',
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          OnReactive(() {
-            if (appState.groups.isWaiting) {
-              return const SizedBox.square(
-                dimension: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          })
-        ],
-      ),
-      content: SizedBox(
-        width: 400,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            TextField(
-              focusNode: nameFocusNode,
-              autofocus: true,
-              controller: nameEditController,
-              decoration: const InputDecoration(
-                labelText: 'Group Name',
-              ),
+    return StatefulBuilder(
+      builder: (context, setState) => AlertDialog(
+        title: Row(
+          children: [
+            Text(
+              isEdit ? 'Edit Group' : 'Add Group',
             ),
-            TextField(
-              controller: accountNumberEditController,
-              decoration: const InputDecoration(
-                labelText: 'Account Number',
-              ),
+            const SizedBox(
+              width: 5,
             ),
-            TextField(
-              controller: leaderNameEditController,
-              decoration: const InputDecoration(
-                labelText: 'Group Leader',
-              ),
-            ),
-            TextField(
-              controller: phoneNumberEditController,
-              decoration: const InputDecoration(
-                labelText: 'Telephone Number',
-              ),
-            ),
-            DateTimePicker(
-              type: DateTimePickerType.date,
-              initialValue: registrationDate.toString(),
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
-              dateLabelText: 'Date of Registration',
-              timeLabelText: "Hour",
-              onChanged: (value) {
-                registrationDate = DateTime.parse(value);
-              },
-              onSaved: (val) {
-                registrationDate = DateTime.parse(val!);
-              },
-            ),
+            OnReactive(() {
+              if (appState.groups.isWaiting) {
+                return const SizedBox.square(
+                  dimension: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            })
           ],
         ),
-      ),
-      actions: <Widget>[
-        if (!isEdit)
-          _buildCreateButton(
-            onPressed: () async {
-              var group = _getGroup();
-              await appState.addGroup(group);
-              if (!appState.groups.hasError) {
-                Navigator.pop(context);
-              }
-            },
+        content: SizedBox(
+          width: 400,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                focusNode: nameFocusNode,
+                autofocus: true,
+                controller: nameEditController,
+                decoration: const InputDecoration(
+                  labelText: 'Group Name',
+                ),
+              ),
+              TextField(
+                controller: accountNumberEditController,
+                decoration: const InputDecoration(
+                  labelText: 'Account Number',
+                ),
+              ),
+              TextField(
+                controller: leaderNameEditController,
+                decoration: const InputDecoration(
+                  labelText: 'Group Leader',
+                ),
+              ),
+              TextField(
+                controller: phoneNumberEditController,
+                decoration: const InputDecoration(
+                  labelText: 'Telephone Number',
+                ),
+              ),
+              DateTimePicker(
+                type: DateTimePickerType.date,
+                initialValue: registrationDate.toString(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+                dateLabelText: 'Date of Registration',
+                timeLabelText: "Hour",
+                onChanged: (value) {
+                  registrationDate = DateTime.parse(value);
+                },
+                onSaved: (val) {
+                  registrationDate = DateTime.parse(val!);
+                },
+              ),
+              Row(
+                children: [
+                  //longitude text field
+                  Expanded(
+                    child: TextField(
+                      controller: longitudeEditController,
+                      decoration: const InputDecoration(
+                        labelText: 'Longitude',
+                      ),
+                    ),
+                  ),
+                  //latitude text field
+                  Expanded(
+                    child: TextField(
+                      controller: latitudeEditController,
+                      decoration: const InputDecoration(
+                        labelText: 'Latitude',
+                      ),
+                    ),
+                  ),
+                  //icon button to get location
+                  if (!_isGettingLocation)
+                    IconButton(
+                      icon: const Icon(Icons.my_location),
+                      onPressed: () async {
+                        setState(() {
+                          _isGettingLocation = true;
+                        });
+                        try {
+                          var location = await appState.getLocation();
+                          setState(() {
+                            _isGettingLocation = false;
+                            _locationData = location;
+                            if (location != null) {
+                              longitudeEditController.text =
+                                  location.longitude.toString();
+                              latitudeEditController.text =
+                                  location.latitude.toString();
+                            }
+                          });
+                        } catch (e) {
+                          RM.scaffold.showSnackBar(SnackBar(
+                            content: Text(e.toString()),
+                          ));
+                        } finally {
+                          setState(() {
+                            _isGettingLocation = false;
+                          });
+                        }
+                      },
+                    )
+                  else
+                    const CircularProgressIndicator(),
+                  //icon button to show in map
+                  if (longitudeEditController.text.isNotEmpty)
+                    IconButton(
+                      icon: const Icon(Icons.map),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/map',
+                          arguments: {
+                            "latitude": latitudeEditController.text,
+                            "longitude": longitudeEditController.text,
+                          },
+                        );
+                      },
+                    ),
+                ],
+              )
+            ],
           ),
-        if (!isEdit)
-          _buildCreateButton(
-            isCreateMore: true,
-            onPressed: () async {
-              var group = _getGroup();
-              await appState.addGroup(group);
-              if (!appState.groups.hasError) {
-                clear();
-                nameFocusNode.requestFocus();
-              }
-            },
-          ),
-        TextButton(
-          child: Text(!isEdit ? 'Cancel' : 'OK'),
-          onPressed: () {
-            var g = _getGroup();
-            if (group != null) {
-              g.id = group.id;
-              appState.updateGroup(g);
-            }
-            Navigator.of(context).pop();
-          },
         ),
-        if (isEdit)
+        actions: <Widget>[
+          if (!isEdit)
+            _buildCreateButton(
+              onPressed: () async {
+                var group = _getGroup();
+                await appState.addGroup(group);
+                if (!appState.groups.hasError) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          if (!isEdit)
+            _buildCreateButton(
+              isCreateMore: true,
+              onPressed: () async {
+                var group = _getGroup();
+                await appState.addGroup(group);
+                if (!appState.groups.hasError) {
+                  clear();
+                  nameFocusNode.requestFocus();
+                }
+              },
+            ),
           TextButton(
-            child: const Text('Cancel'),
+            child: Text(!isEdit ? 'Cancel' : 'OK'),
             onPressed: () {
+              var g = _getGroup();
+              if (group != null) {
+                g.id = group.id;
+                appState.updateGroup(g);
+              }
               Navigator.of(context).pop();
             },
           ),
-      ],
+          if (isEdit)
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+        ],
+      ),
     );
   }
 
   Group _getGroup() {
     return Group(
-      "",
-      nameEditController.text,
-      accountNumberEditController.text,
+      id: "",
+      name: nameEditController.text,
+      accountNumber: accountNumberEditController.text,
       registrationDate: registrationDate ?? DateTime.now(),
       leaderName: leaderNameEditController.text,
       phoneNumber: phoneNumberEditController.text,
+      latitude: longitudeEditController.text.isNotEmpty
+          ? double.parse(longitudeEditController.text)
+          : null,
+      longitude: latitudeEditController.text.isNotEmpty
+          ? double.parse(latitudeEditController.text)
+          : null,
     );
   }
 
