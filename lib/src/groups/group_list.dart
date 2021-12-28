@@ -141,6 +141,7 @@ class _GroupListState extends State<GroupList> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8),
                   //longitude text field
                   Expanded(
                     child: TextField(
@@ -408,6 +409,16 @@ class _GroupListState extends State<GroupList> {
                                 _confirmDelete(context, group);
                               },
                             ),
+                            if (group.latitude != null &&
+                                group.longitude != null)
+                              IconButton(
+                                icon: const Icon(Icons.map),
+                                onPressed: () async {
+                                  var url =
+                                      'https://maps.google.com/maps?ll=${group.latitude},${group.longitude}';
+                                  await launch(url);
+                                },
+                              ),
                           ],
                         ),
                       ),
