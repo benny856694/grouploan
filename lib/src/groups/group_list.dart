@@ -5,6 +5,7 @@ import 'package:group_loan/src/model/group.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GroupList extends StatefulWidget {
   const GroupList({Key? key}) : super(key: key);
@@ -131,21 +132,21 @@ class _GroupListState extends State<GroupList> {
               ),
               Row(
                 children: [
-                  //longitude text field
-                  Expanded(
-                    child: TextField(
-                      controller: longitudeEditController,
-                      decoration: const InputDecoration(
-                        labelText: 'Longitude',
-                      ),
-                    ),
-                  ),
                   //latitude text field
                   Expanded(
                     child: TextField(
                       controller: latitudeEditController,
                       decoration: const InputDecoration(
                         labelText: 'Latitude',
+                      ),
+                    ),
+                  ),
+                  //longitude text field
+                  Expanded(
+                    child: TextField(
+                      controller: longitudeEditController,
+                      decoration: const InputDecoration(
+                        labelText: 'Longitude',
                       ),
                     ),
                   ),
@@ -186,15 +187,10 @@ class _GroupListState extends State<GroupList> {
                   if (longitudeEditController.text.isNotEmpty)
                     IconButton(
                       icon: const Icon(Icons.map),
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/map',
-                          arguments: {
-                            "latitude": latitudeEditController.text,
-                            "longitude": longitudeEditController.text,
-                          },
-                        );
+                      onPressed: () async {
+                        var url =
+                            'https://maps.google.com/maps?ll=${latitudeEditController.text},${longitudeEditController.text}';
+                        await launch(url);
                       },
                     ),
                 ],
@@ -256,11 +252,11 @@ class _GroupListState extends State<GroupList> {
       registrationDate: registrationDate ?? DateTime.now(),
       leaderName: leaderNameEditController.text,
       phoneNumber: phoneNumberEditController.text,
-      latitude: longitudeEditController.text.isNotEmpty
-          ? double.parse(longitudeEditController.text)
-          : null,
-      longitude: latitudeEditController.text.isNotEmpty
+      latitude: latitudeEditController.text.isNotEmpty
           ? double.parse(latitudeEditController.text)
+          : null,
+      longitude: longitudeEditController.text.isNotEmpty
+          ? double.parse(longitudeEditController.text)
           : null,
     );
   }
