@@ -254,36 +254,36 @@ class _GroupListState extends State<GroupList> {
                 DataColumn(
                   label: Text(
                     'Group Name',
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.button,
                   ),
                 ),
                 DataColumn(
                     label: Text(
                   'Account Number',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.button,
                 )),
                 DataColumn(
                   label: Text(
                     'Group Leader',
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.button,
                   ),
                 ),
                 DataColumn(
                   label: Text(
                     'Telephone  Number',
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.button,
                   ),
                 ),
                 DataColumn(
                   label: Text(
                     'Date of Registration',
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.button,
                   ),
                 ),
                 DataColumn(
                   label: Text(
                     'Action',
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.button,
                   ),
                 ),
               ],
