@@ -13,5 +13,8 @@ class Staffs extends Layout {
   }
 
   @override
-  List<Widget> buildNavMenus(BuildContext context) => createNavMenus(context);
+  List<Widget> buildNavMenus(BuildContext context) => createNavMenus(
+        context,
+        selectedButton: "Staff",
+      );
 }
