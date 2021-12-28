@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,7 +23,6 @@ class _GroupListState extends State<GroupList> {
   var nameFocusNode = FocusNode();
   var isEdit = false;
   var _isGettingLocation = false;
-  LocationData? _locationData;
 
   void clear() {
     nameEditController.clear();
@@ -33,7 +31,6 @@ class _GroupListState extends State<GroupList> {
     phoneNumberEditController.clear();
     latitudeEditController.clear();
     longitudeEditController.clear();
-    _locationData = null;
     _isGettingLocation = false;
   }
 
@@ -163,7 +160,6 @@ class _GroupListState extends State<GroupList> {
                           var location = await appState.getLocation();
                           setState(() {
                             _isGettingLocation = false;
-                            _locationData = location;
                             if (location != null) {
                               longitudeEditController.text =
                                   location.longitude.toString();
