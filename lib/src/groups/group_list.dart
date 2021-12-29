@@ -160,11 +160,12 @@ class _GroupListState extends State<GroupList> {
                           var location = await appState.getLocation();
                           setState(() {
                             _isGettingLocation = false;
-                            if (location != null) {
+                            if (location?.longitude != null) {
                               longitudeEditController.text =
-                                  location.longitude.toString();
+                                  //4 digit precision
+                                  location!.longitude!.toStringAsFixed(4);
                               latitudeEditController.text =
-                                  location.latitude.toString();
+                                  location.latitude!.toStringAsFixed(4);
                             }
                           });
                         } catch (e) {
@@ -179,7 +180,12 @@ class _GroupListState extends State<GroupList> {
                       },
                     )
                   else
-                    const CircularProgressIndicator(),
+                    const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
                   //icon button to show in map
                   if (longitudeEditController.text.isNotEmpty)
                     IconButton(
@@ -372,6 +378,7 @@ class _GroupListState extends State<GroupList> {
               rows: [
                 for (var group in appState.groups.state)
                   DataRow(
+                    key: ValueKey(group.id),
                     cells: [
                       DataCell(
                         Text(group.name),
