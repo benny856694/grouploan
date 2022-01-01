@@ -7,6 +7,7 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const labelTel = 'Tel.';
+const labelAddGroup = 'Add Group';
 
 class GroupList extends StatefulWidget {
   const GroupList({Key? key}) : super(key: key);
@@ -66,7 +67,7 @@ class _GroupListState extends State<GroupList> {
         title: Row(
           children: [
             Text(
-              isEdit ? 'Edit Group' : 'Add Group',
+              isEdit ? 'Edit Group' : labelAddGroup,
             ),
             const SizedBox(
               width: 5,
@@ -318,7 +319,7 @@ class _GroupListState extends State<GroupList> {
                   },
                 );
               },
-              label: const Text('Create Group'),
+              label: const Text(labelAddGroup),
               icon: const Icon(Icons.add),
             ),
             const SizedBox(
