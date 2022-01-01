@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+const labelTel = 'Tel.';
+
 class GroupList extends StatefulWidget {
   const GroupList({Key? key}) : super(key: key);
   @override
@@ -110,7 +112,7 @@ class _GroupListState extends State<GroupList> {
               TextField(
                 controller: phoneNumberEditController,
                 decoration: const InputDecoration(
-                  labelText: 'Tel. Number',
+                  labelText: labelTel,
                 ),
               ),
               DateTimePicker(
@@ -304,6 +306,7 @@ class _GroupListState extends State<GroupList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton.icon(
               onPressed: () {
@@ -335,7 +338,7 @@ class _GroupListState extends State<GroupList> {
           ],
         ),
         SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+          scrollDirection: Axis.vertical,
           child: OnReactive(
             () => DataTable(
               columns: [
@@ -358,7 +361,7 @@ class _GroupListState extends State<GroupList> {
                 ),
                 DataColumn(
                   label: Text(
-                    'Tel. Number',
+                    labelTel,
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),

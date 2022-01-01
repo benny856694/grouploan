@@ -21,12 +21,14 @@ abstract class Layout extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.group),
             onPressed: () {
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/groups');
             },
           ),
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/staffs');
             },
           ),
@@ -34,7 +36,7 @@ abstract class Layout extends StatelessWidget {
       ),
       body: Container(
         alignment: Alignment.topCenter,
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 16),
         child: mainContent,
       ),
     );
