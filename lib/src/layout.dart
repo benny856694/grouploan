@@ -16,7 +16,7 @@ abstract class Layout extends StatelessWidget {
       appBar: AppBar(
         leading: Icon(Icons.money),
         title: Text('Group Loan'),
-        centerTitle: true,
+        //centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(Icons.group),

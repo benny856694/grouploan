@@ -26,6 +26,7 @@ class _GroupListState extends State<GroupList> {
   var nameFocusNode = FocusNode();
   var isEdit = false;
   var _isGettingLocation = false;
+  final selectedGroup = <Group>[].inj();
 
   void clear() {
     nameEditController.clear();
@@ -331,6 +332,26 @@ class _GroupListState extends State<GroupList> {
             const SizedBox(
               width: 8,
             ),
+            OnBuilder(
+              listenTo: selectedGroup,
+              builder: () {
+                return ElevatedButton.icon(
+                  onPressed: selectedGroup.state.isEmpty
+                      ? null
+                      : () async {
+                          await appState.removeGroups(selectedGroup.state);
+                          selectedGroup.setState((s) {
+                            return <Group>[];
+                          });
+                        },
+                  icon: const Icon(Icons.delete),
+                  label: const Text("Delete"),
+                );
+              },
+            ),
+            const SizedBox(
+              width: 8,
+            ),
             OnReactive(
               () => appState.groups.onOrElse(
                 onWaiting: () => const SizedBox.square(
@@ -348,6 +369,7 @@ class _GroupListState extends State<GroupList> {
           scrollDirection: Axis.vertical,
           child: OnReactive(
             () => DataTable(
+              showCheckboxColumn: true,
               columns: [
                 DataColumn(
                   label: Text(
@@ -388,6 +410,15 @@ class _GroupListState extends State<GroupList> {
               rows: [
                 for (var group in appState.groups.state)
                   DataRow(
+                    onSelectChanged: (b) {
+                      if (b != null) {
+                        b
+                            ? selectedGroup.state.add(group)
+                            : selectedGroup.state.remove(group);
+                        selectedGroup.notify();
+                      }
+                    },
+                    selected: selectedGroup.state.contains(group),
                     key: ValueKey(group.id),
                     cells: [
                       DataCell(

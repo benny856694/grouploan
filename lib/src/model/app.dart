@@ -52,6 +52,13 @@ class AppState {
     });
   }
 
+  Future removeGroups(List<Group> groups) async {
+    this.groups.setState((s) async {
+      await Future.wait(groups.map((g) => _groupsRef.doc(g.id).delete()));
+      return s.where((g) => !groups.contains(g)).toList();
+    });
+  }
+
   void loadGroups() {
     if (groups.state.isEmpty) {
       groups.setState((s) async {
