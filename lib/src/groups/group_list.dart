@@ -92,25 +92,25 @@ class _GroupListState extends State<GroupList> {
                 autofocus: true,
                 controller: nameEditController,
                 decoration: const InputDecoration(
-                  labelText: 'Group Name',
+                  labelText: 'Name',
                 ),
               ),
               TextField(
                 controller: accountNumberEditController,
                 decoration: const InputDecoration(
-                  labelText: 'Account Number',
+                  labelText: 'Account No.',
                 ),
               ),
               TextField(
                 controller: leaderNameEditController,
                 decoration: const InputDecoration(
-                  labelText: 'Group Leader',
+                  labelText: 'Leader Name',
                 ),
               ),
               TextField(
                 controller: phoneNumberEditController,
                 decoration: const InputDecoration(
-                  labelText: 'Telephone Number',
+                  labelText: 'Tel. Number',
                 ),
               ),
               DateTimePicker(
@@ -118,7 +118,7 @@ class _GroupListState extends State<GroupList> {
                 initialValue: registrationDate.toString(),
                 firstDate: DateTime(2000),
                 lastDate: DateTime(2100),
-                dateLabelText: 'Date of Registration',
+                dateLabelText: 'Registration Date',
                 timeLabelText: "Hour",
                 onChanged: (value) {
                   registrationDate = DateTime.parse(value);
@@ -341,30 +341,30 @@ class _GroupListState extends State<GroupList> {
               columns: [
                 DataColumn(
                   label: Text(
-                    'Group Name',
+                    'Name',
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),
                 DataColumn(
                     label: Text(
-                  'Account Number',
+                  'Account No.',
                   style: Theme.of(context).textTheme.button,
                 )),
                 DataColumn(
                   label: Text(
-                    'Group Leader',
+                    'Leader Name',
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),
                 DataColumn(
                   label: Text(
-                    'Telephone  Number',
+                    'Tel. Number',
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),
                 DataColumn(
                   label: Text(
-                    'Date of Registration',
+                    'Registration Date',
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),

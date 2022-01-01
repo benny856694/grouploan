@@ -12,26 +12,31 @@ abstract class Layout extends StatelessWidget {
   Widget _wideLayout(BuildContext context) {
     var navMenus = buildNavMenus(context);
     var mainContent = buildMainContent(context);
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          child: IntrinsicWidth(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: navMenus,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: Icon(Icons.money),
+        title: Text('Group Loan'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.group),
+            onPressed: () {
+              Navigator.pushNamed(context, '/groups');
+            },
           ),
-        ),
-        Expanded(
-          child: Container(
-            alignment: Alignment.topLeft,
-            margin: EdgeInsets.only(left: 16),
-            padding: EdgeInsets.only(left: 16, top: 24, right: 16, bottom: 16),
-            child: mainContent,
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.pushNamed(context, '/staffs');
+            },
           ),
-        ),
-      ],
+        ],
+      ),
+      body: Container(
+        alignment: Alignment.topCenter,
+        padding: const EdgeInsets.all(16.0),
+        child: mainContent,
+      ),
     );
   }
 
@@ -56,12 +61,6 @@ abstract class Layout extends StatelessWidget {
       w = _narrowLayout(context);
     }
 
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(8),
-        alignment: Alignment.topCenter,
-        child: w,
-      ),
-    );
+    return w;
   }
 }
