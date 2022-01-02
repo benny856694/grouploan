@@ -36,7 +36,7 @@ abstract class Layout extends StatelessWidget {
       ),
       body: Container(
         alignment: Alignment.topCenter,
-        padding: const EdgeInsets.only(top: 16),
+        padding: const EdgeInsets.all(16),
         child: mainContent,
       ),
     );

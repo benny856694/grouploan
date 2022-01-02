@@ -7,7 +7,8 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const labelTel = 'Tel.';
-const labelAddGroup = 'Add Group';
+const labelAddGroup = 'Add';
+const labelEditGroup = 'Edit';
 
 class GroupList extends StatefulWidget {
   const GroupList({Key? key}) : super(key: key);
@@ -68,7 +69,7 @@ class _GroupListState extends State<GroupList> {
         title: Row(
           children: [
             Text(
-              isEdit ? 'Edit Group' : labelAddGroup,
+              isEdit ? labelEditGroup : labelAddGroup,
             ),
           ],
         ),
@@ -339,9 +340,11 @@ class _GroupListState extends State<GroupList> {
                   onPressed: selectedGroup.state.isEmpty
                       ? null
                       : () async {
-                          await appState.removeGroups(selectedGroup.state);
-                          selectedGroup.setState((s) {
-                            return <Group>[];
+                          await _confirmDelete(context, selectedGroup.state,
+                              () {
+                            appState.removeGroups(selectedGroup.state);
+                            selectedGroup.setState((s) => <Group>[]);
+                            Navigator.of(context).pop();
                           });
                         },
                   icon: const Icon(Icons.delete),
@@ -365,112 +368,143 @@ class _GroupListState extends State<GroupList> {
             ),
           ],
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: OnReactive(
-            () => DataTable(
-              showCheckboxColumn: true,
-              columns: [
-                DataColumn(
-                  label: Text(
-                    'Name',
-                    style: Theme.of(context).textTheme.button,
-                  ),
-                ),
-                DataColumn(
-                    label: Text(
-                  'Account No.',
-                  style: Theme.of(context).textTheme.button,
-                )),
-                DataColumn(
-                  label: Text(
-                    'Leader Name',
-                    style: Theme.of(context).textTheme.button,
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    labelTel,
-                    style: Theme.of(context).textTheme.button,
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Registration Date',
-                    style: Theme.of(context).textTheme.button,
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Action',
-                    style: Theme.of(context).textTheme.button,
-                  ),
-                ),
-              ],
-              rows: [
-                for (var group in appState.groups.state)
-                  DataRow(
-                    onSelectChanged: (b) {
-                      if (b != null) {
-                        b
-                            ? selectedGroup.state.add(group)
-                            : selectedGroup.state.remove(group);
-                        selectedGroup.notify();
-                      }
-                    },
-                    selected: selectedGroup.state.contains(group),
-                    key: ValueKey(group.id),
-                    cells: [
-                      DataCell(
-                        Text(group.name),
-                      ),
-                      DataCell(
-                        Text(group.accountNumber),
-                      ),
-                      DataCell(
-                        Text(group.leaderName ?? ""),
-                      ),
-                      DataCell(
-                        Text(group.phoneNumber ?? ""),
-                      ),
-                      DataCell(
-                        Text(group.registrationDate != null
-                            ? DateFormat.yMMMd().format(group.registrationDate!)
-                            : ''),
-                      ),
-                      DataCell(
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                _editGroup(context, group);
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                _confirmDelete(context, group);
-                              },
-                            ),
-                            if (group.latitude != null &&
-                                group.longitude != null)
-                              IconButton(
-                                icon: const Icon(Icons.map),
-                                onPressed: () async {
-                                  var url =
-                                      'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
-                                  await launch(url);
-                                },
-                              ),
-                          ],
-                        ),
+        OnBuilder(
+          listenTo: appState.groups,
+          builder: () {
+            if (appState.groups.state.isEmpty) {
+              return Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.groups_outlined),
+                      Text(
+                        "No groups, please add groups",
                       ),
                     ],
                   ),
-              ],
-            ),
-          ),
+                ),
+              );
+            } else {
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: OnReactive(
+                  () => DataTable(
+                    showCheckboxColumn: true,
+                    columns: [
+                      DataColumn(
+                        label: Text(
+                          'Name',
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      ),
+                      DataColumn(
+                          label: Text(
+                        'Account No.',
+                        style: Theme.of(context).textTheme.button,
+                      )),
+                      DataColumn(
+                        label: Text(
+                          'Leader Name',
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          labelTel,
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Registration Date',
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Action',
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      ),
+                    ],
+                    rows: [
+                      for (var group in appState.groups.state)
+                        DataRow(
+                          onSelectChanged: (b) {
+                            if (b != null) {
+                              b
+                                  ? selectedGroup.state.add(group)
+                                  : selectedGroup.state.remove(group);
+                              selectedGroup.notify();
+                            }
+                          },
+                          selected: selectedGroup.state.contains(group),
+                          key: ValueKey(group.id),
+                          cells: [
+                            DataCell(
+                              Text(group.name),
+                            ),
+                            DataCell(
+                              Text(group.accountNumber),
+                            ),
+                            DataCell(
+                              Text(group.leaderName ?? ""),
+                            ),
+                            DataCell(
+                              Text(group.phoneNumber ?? ""),
+                            ),
+                            DataCell(
+                              Text(group.registrationDate != null
+                                  ? DateFormat.yMMMd()
+                                      .format(group.registrationDate!)
+                                  : ''),
+                            ),
+                            DataCell(
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () {
+                                      _editGroup(context, group);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      _confirmDelete(context, [group], () {
+                                        appState.removeGroups([group]);
+                                        selectedGroup.setState(
+                                          (s) => s
+                                              .where((element) =>
+                                                  element.id != group.id)
+                                              .toList(),
+                                        );
+                                        Navigator.of(context).pop();
+                                      });
+                                    },
+                                  ),
+                                  if (group.latitude != null &&
+                                      group.longitude != null)
+                                    IconButton(
+                                      icon: const Icon(Icons.map),
+                                      onPressed: () async {
+                                        var url =
+                                            'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
+                                        await launch(url);
+                                      },
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }
+          },
         ),
       ],
     );
@@ -490,7 +524,8 @@ class _GroupListState extends State<GroupList> {
 
   Future<dynamic> _confirmDelete(
     BuildContext context,
-    Group group,
+    List<Group> groups,
+    void Function()? onConfirm,
   ) {
     return showDialog(
       context: context,
@@ -498,15 +533,14 @@ class _GroupListState extends State<GroupList> {
         return AlertDialog(
           title: const Text('Delete Group'),
           content: Text(
-            'Are you sure you want to delete this group: "${group.name}"?',
+            groups.length == 1
+                ? 'Are you sure you want to delete this group: "${groups.first.name}"?'
+                : 'Are you sure you want to delete these groups?',
           ),
           actions: <Widget>[
             TextButton(
               child: const Text('Delete'),
-              onPressed: () {
-                appState.removeGroup(group);
-                Navigator.of(context).pop();
-              },
+              onPressed: onConfirm,
             ),
             TextButton(
               child: const Text('Cancel'),
