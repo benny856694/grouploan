@@ -23,6 +23,7 @@ class AppState {
   );
 
   final _locator = Location();
+  var _initialized = false;
 
   late final CollectionReference<Map<String, dynamic>> _groupsRef;
 
@@ -60,7 +61,8 @@ class AppState {
   }
 
   void loadGroups() {
-    if (groups.state.isEmpty) {
+    if (groups.state.isEmpty && !_initialized) {
+      _initialized = true;
       groups.setState((s) async {
         var snapshot = await _groupsRef.limit(20).get();
         return snapshot.docs.map((doc) {

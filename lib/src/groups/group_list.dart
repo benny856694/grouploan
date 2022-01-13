@@ -182,7 +182,7 @@ class _GroupListState extends State<GroupList> {
                       //icon button to show in map
                       if (longitudeEditController.text.isNotEmpty)
                         IconButton(
-                          icon: const Icon(Icons.map),
+                          icon: const Icon(Icons.location_pin),
                           onPressed: () async {
                             var url =
                                 'https://www.google.com/maps/search/?api=1&query=${latitudeEditController.text},${longitudeEditController.text}';
@@ -487,7 +487,7 @@ class _GroupListState extends State<GroupList> {
                                   if (group.latitude != null &&
                                       group.longitude != null)
                                     IconButton(
-                                      icon: const Icon(Icons.map),
+                                      icon: const Icon(Icons.location_pin),
                                       onPressed: () async {
                                         var url =
                                             'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
