@@ -41,7 +41,7 @@ abstract class Layout extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.menu),
                         onPressed: () {
-                          Scaffold.of(context).openDrawer();
+                          Scaffold.of(context).openEndDrawer();
                         },
                       ),
                     ],
@@ -51,6 +51,19 @@ abstract class Layout extends StatelessWidget {
             },
           ),
         ],
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            ...navMenus,
+            ListTile(
+              title: Text('Logout'),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
       ),
       body: Container(
         alignment: Alignment.topCenter,
