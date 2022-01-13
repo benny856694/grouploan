@@ -7,10 +7,11 @@ Widget createTextButton(
   VoidCallback onPressed, {
   bool isSelected = false,
 }) {
+  final selectedColor = Theme.of(context).buttonTheme.colorScheme?.primary;
   return InkWell(
     onTap: onPressed,
     child: Container(
-      color: isSelected ? Theme.of(context).highlightColor : null,
+      //color: isSelected ? Theme.of(context).highlightColor : null,
       padding: const EdgeInsets.all(
         8.0,
       ),
@@ -18,16 +19,14 @@ Widget createTextButton(
         children: [
           Icon(
             icon,
-            color: isSelected
-                ? Theme.of(context).buttonTheme.colorScheme?.primary
-                : null,
+            color: isSelected ? selectedColor : null,
           ),
           const SizedBox(
             width: 8,
           ),
           Text(
             text,
-            style: Theme.of(context).textTheme.button,
+            style: isSelected ? TextStyle(color: selectedColor) : null,
           ),
         ],
       ),
