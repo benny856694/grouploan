@@ -357,6 +357,21 @@ class _GroupsState extends State<Groups> {
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
                 var group = appState.groups.state[index];
+                var title = group.name;
+                if (group.accountNumber.isNotEmpty) {
+                  title += ' (${group.accountNumber})';
+                }
+
+                if (group.leaderName?.isNotEmpty == true) {
+                  title += ' - ${group.leaderName}';
+                }
+                if (group.phoneNumber?.isNotEmpty == true) {
+                  title += ' (${group.phoneNumber})';
+                }
+                var subtitle = "";
+                if (group.registrationDate != null) {
+                  subtitle += '\n${group.registrationDate.toString()}';
+                }
                 return Slidable(
                   startActionPane: ActionPane(
                     motion: const ScrollMotion(),
@@ -369,6 +384,9 @@ class _GroupsState extends State<Groups> {
                           await _confirmDelete(ctx, [group], () {
                             appState.removeGroups([group]);
                             Navigator.of(ctx).pop();
+                            RM.scaffold.showSnackBar(SnackBar(
+                              content: Text('Group "${group.name}" deleted'),
+                            ));
                           });
                         },
                       ),
@@ -384,8 +402,18 @@ class _GroupsState extends State<Groups> {
                     ],
                   ),
                   child: ListTile(
-                    title: Text(group.name),
-                    subtitle: Text(group.accountNumber),
+                    contentPadding: const EdgeInsets.only(left: 16, right: 16),
+                    title: Text(title),
+                    subtitle: subtitle != null ? Text(subtitle) : null,
+                    trailing: group.latitude != null && group.longitude != null
+                        ? IconButton(
+                            icon: const Icon(Icons.location_pin),
+                            onPressed: () async {
+                              var url = _getGoogleMapUrl(group);
+                              await launch(url);
+                            },
+                          )
+                        : null,
                     onTap: () {
                       _editGroup(context, group);
                     },
