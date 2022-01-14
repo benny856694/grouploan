@@ -370,7 +370,7 @@ class _GroupsState extends State<Groups> {
                 }
                 var subtitle = "";
                 if (group.registrationDate != null) {
-                  subtitle += '\n${group.registrationDate.toString()}';
+                  subtitle += group.registrationDate.toString();
                 }
                 return Slidable(
                   startActionPane: ActionPane(
@@ -402,9 +402,20 @@ class _GroupsState extends State<Groups> {
                     ],
                   ),
                   child: ListTile(
-                    contentPadding: const EdgeInsets.only(left: 16, right: 16),
+                    leading: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        _confirmDelete(ctx, [group], () {
+                          appState.removeGroups([group]);
+                          Navigator.of(ctx).pop();
+                          RM.scaffold.showSnackBar(SnackBar(
+                            content: Text('Group "${group.name}" deleted'),
+                          ));
+                        });
+                      },
+                    ),
                     title: Text(title),
-                    subtitle: subtitle != null ? Text(subtitle) : null,
+                    subtitle: Text(subtitle),
                     trailing: group.latitude != null && group.longitude != null
                         ? IconButton(
                             icon: const Icon(Icons.location_pin),
