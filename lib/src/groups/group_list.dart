@@ -1,6 +1,7 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:intl/intl.dart';
@@ -8,17 +9,20 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../helper.dart';
+
 const labelTel = 'Tel.';
 const labelAddGroup = 'Add';
 const labelEditGroup = 'Edit';
 
-class GroupList extends StatefulWidget {
-  const GroupList({Key? key}) : super(key: key);
+class Groups extends StatefulWidget {
+  const Groups({Key? key}) : super(key: key);
+  static const String routeName = Constants.groupRoute;
   @override
-  _GroupListState createState() => _GroupListState();
+  _GroupsState createState() => _GroupsState();
 }
 
-class _GroupListState extends State<GroupList> {
+class _GroupsState extends State<Groups> {
   var nameEditController = TextEditingController();
   var phoneNumberEditController = TextEditingController();
   var leaderNameEditController = TextEditingController();
@@ -315,13 +319,20 @@ class _GroupListState extends State<GroupList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton.icon(
+    var deviceType = getDeviceType(MediaQuery.of(context).size);
+    var navMenu = createNavMenus(context, selectedButton: Constants.groups);
+    return Scaffold(
+      appBar: createAppBar(navMenu),
+      endDrawer: createEndDrawer(navMenu, context),
+      body: ResponsiveBuilder(builder: (context, size) {
+        if (size.isMobile) {
+          return _groupListMobile(context);
+        } else {
+          return _groupListDesktop(context);
+        }
+      }),
+      floatingActionButton: deviceType == DeviceScreenType.mobile
+          ? FloatingActionButton(
               onPressed: () {
                 showDialog(
                   barrierDismissible: false,
@@ -331,60 +342,9 @@ class _GroupListState extends State<GroupList> {
                   },
                 );
               },
-              label: const Text(labelAddGroup),
-              icon: const Icon(Icons.add),
-            ),
-            const SizedBox(
-              width: 8,
-            ),
-            OnBuilder(
-              listenTo: selectedGroup,
-              builder: () {
-                return ElevatedButton.icon(
-                  onPressed: selectedGroup.state.isEmpty
-                      ? null
-                      : () async {
-                          await _confirmDelete(context, selectedGroup.state,
-                              () {
-                            appState.removeGroups(selectedGroup.state);
-                            selectedGroup.setState((s) => <Group>[]);
-                            Navigator.of(context).pop();
-                          });
-                        },
-                  icon: const Icon(Icons.delete),
-                  label: const Text("Delete"),
-                );
-              },
-            ),
-            const SizedBox(
-              width: 8,
-            ),
-            OnReactive(
-              () => appState.groups.onOrElse(
-                onWaiting: () => const SizedBox.square(
-                  dimension: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                  ),
-                ),
-                orElse: (s) => const SizedBox.shrink(),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        Expanded(
-          child: ResponsiveBuilder(builder: (context, size) {
-            if (size.isMobile) {
-              return _groupListMobile(context);
-            } else {
-              return _groupListDesktop(context);
-            }
-          }),
-        )
-      ],
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -398,7 +358,7 @@ class _GroupListState extends State<GroupList> {
               itemBuilder: (context, index) {
                 var group = appState.groups.state[index];
                 return Slidable(
-                  endActionPane: ActionPane(
+                  startActionPane: ActionPane(
                     motion: const ScrollMotion(),
                     children: [
                       SlidableAction(
@@ -437,140 +397,209 @@ class _GroupListState extends State<GroupList> {
   }
 
   Widget _groupListDesktop(BuildContext context) {
-    return OnBuilder(
-      listenTo: appState.groups,
-      builder: () {
-        if (appState.groups.state.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.groups_outlined),
-                Text(
-                  "No groups, please add groups",
+    return Container(
+      padding: const EdgeInsets.all(8),
+      alignment: Alignment.topCenter,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (_) {
+                      return _buildGroupDialog(context);
+                    },
+                  );
+                },
+                label: const Text(labelAddGroup),
+                icon: const Icon(Icons.add),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              OnBuilder(
+                listenTo: selectedGroup,
+                builder: () {
+                  return ElevatedButton.icon(
+                    onPressed: selectedGroup.state.isEmpty
+                        ? null
+                        : () async {
+                            await _confirmDelete(context, selectedGroup.state,
+                                () {
+                              appState.removeGroups(selectedGroup.state);
+                              selectedGroup.setState((s) => <Group>[]);
+                              Navigator.of(context).pop();
+                            });
+                          },
+                    icon: const Icon(Icons.delete),
+                    label: const Text("Delete"),
+                  );
+                },
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              OnReactive(
+                () => appState.groups.onOrElse(
+                  onWaiting: () => const SizedBox.square(
+                    dimension: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  ),
+                  orElse: (s) => const SizedBox.shrink(),
                 ),
-              ],
-            ),
-          );
-        } else {
-          return SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: OnReactive(
-              () => DataTable(
-                showCheckboxColumn: true,
-                columns: [
-                  DataColumn(
-                    label: Text(
-                      'Name',
-                      style: Theme.of(context).textTheme.button,
-                    ),
-                  ),
-                  DataColumn(
-                      label: Text(
-                    'Account No.',
-                    style: Theme.of(context).textTheme.button,
-                  )),
-                  DataColumn(
-                    label: Text(
-                      'Leader Name',
-                      style: Theme.of(context).textTheme.button,
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      labelTel,
-                      style: Theme.of(context).textTheme.button,
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Registration Date',
-                      style: Theme.of(context).textTheme.button,
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Action',
-                      style: Theme.of(context).textTheme.button,
-                    ),
-                  ),
-                ],
-                rows: [
-                  for (var group in appState.groups.state)
-                    DataRow(
-                      onSelectChanged: (b) {
-                        if (b != null) {
-                          b
-                              ? selectedGroup.state.add(group)
-                              : selectedGroup.state.remove(group);
-                          selectedGroup.notify();
-                        }
-                      },
-                      selected: selectedGroup.state.contains(group),
-                      key: ValueKey(group.id),
-                      cells: [
-                        DataCell(
-                          Text(group.name),
-                        ),
-                        DataCell(
-                          Text(group.accountNumber),
-                        ),
-                        DataCell(
-                          Text(group.leaderName ?? ""),
-                        ),
-                        DataCell(
-                          Text(group.phoneNumber ?? ""),
-                        ),
-                        DataCell(
-                          Text(group.registrationDate != null
-                              ? DateFormat.yMMMd()
-                                  .format(group.registrationDate!)
-                              : ''),
-                        ),
-                        DataCell(
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  _editGroup(context, group);
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  _confirmDelete(context, [group], () {
-                                    appState.removeGroups([group]);
-                                    selectedGroup.setState(
-                                      (s) => s
-                                          .where((element) =>
-                                              element.id != group.id)
-                                          .toList(),
-                                    );
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              if (group.latitude != null &&
-                                  group.longitude != null)
-                                IconButton(
-                                  icon: const Icon(Icons.location_pin),
-                                  onPressed: () async {
-                                    String url = _getGoogleMapUrl(group);
-                                    await launch(url);
-                                  },
-                                ),
-                            ],
-                          ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Expanded(
+            child: OnBuilder(
+              listenTo: appState.groups,
+              builder: () {
+                if (appState.groups.state.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.groups_outlined),
+                        Text(
+                          "No groups, please add groups",
                         ),
                       ],
                     ),
-                ],
-              ),
+                  );
+                } else {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: OnReactive(
+                      () => DataTable(
+                        showCheckboxColumn: true,
+                        columns: [
+                          DataColumn(
+                            label: Text(
+                              'Name',
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                          ),
+                          DataColumn(
+                              label: Text(
+                            'Account No.',
+                            style: Theme.of(context).textTheme.button,
+                          )),
+                          DataColumn(
+                            label: Text(
+                              'Leader Name',
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              labelTel,
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Registration Date',
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Action',
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                          ),
+                        ],
+                        rows: [
+                          for (var group in appState.groups.state)
+                            DataRow(
+                              onSelectChanged: (b) {
+                                if (b != null) {
+                                  b
+                                      ? selectedGroup.state.add(group)
+                                      : selectedGroup.state.remove(group);
+                                  selectedGroup.notify();
+                                }
+                              },
+                              selected: selectedGroup.state.contains(group),
+                              key: ValueKey(group.id),
+                              cells: [
+                                DataCell(
+                                  Text(group.name),
+                                ),
+                                DataCell(
+                                  Text(group.accountNumber),
+                                ),
+                                DataCell(
+                                  Text(group.leaderName ?? ""),
+                                ),
+                                DataCell(
+                                  Text(group.phoneNumber ?? ""),
+                                ),
+                                DataCell(
+                                  Text(group.registrationDate != null
+                                      ? DateFormat.yMMMd()
+                                          .format(group.registrationDate!)
+                                      : ''),
+                                ),
+                                DataCell(
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          _editGroup(context, group);
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () {
+                                          _confirmDelete(context, [group], () {
+                                            appState.removeGroups([group]);
+                                            selectedGroup.setState(
+                                              (s) => s
+                                                  .where((element) =>
+                                                      element.id != group.id)
+                                                  .toList(),
+                                            );
+                                            Navigator.of(context).pop();
+                                          });
+                                        },
+                                      ),
+                                      if (group.latitude != null &&
+                                          group.longitude != null)
+                                        IconButton(
+                                          icon: const Icon(Icons.location_pin),
+                                          onPressed: () async {
+                                            String url =
+                                                _getGoogleMapUrl(group);
+                                            await launch(url);
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
-          );
-        }
-      },
+          ),
+        ],
+      ),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 Widget createTextButton(
   BuildContext context,
@@ -82,3 +83,59 @@ List<Widget> createNavMenus(
     ),
   ];
 }
+
+Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: [
+          ...navMenus,
+          ListTile(
+            title: Text('Logout'),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  AppBar createAppBar(List<Widget> navMenus) {
+    return AppBar(
+      leading: Icon(Icons.money),
+      title: Text('Group Loan'),
+      centerTitle: false,
+      actions: [
+        ResponsiveBuilder(
+          builder: (context, sizingInformation) {
+            final paddingRight = EdgeInsets.only(right: 10);
+            if (sizingInformation.deviceScreenType ==
+                DeviceScreenType.desktop) {
+              return Container(
+                padding: paddingRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: navMenus,
+                ),
+              );
+            } else {
+              return Container(
+                padding: paddingRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.menu),
+                      onPressed: () {
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
+      ],
+    );
+  }
