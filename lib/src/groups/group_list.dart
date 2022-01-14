@@ -387,6 +387,7 @@ class _GroupListState extends State<GroupList> {
   }
 
   Widget _groupListMobile(BuildContext context) {
+    final ctx = context;
     return OnBuilder(
         listenTo: appState.groups,
         builder: () {
@@ -403,8 +404,9 @@ class _GroupListState extends State<GroupList> {
                         foregroundColor: Colors.red,
                         icon: Icons.delete,
                         onPressed: (context) async {
-                          await _confirmDelete(context, [group], () {
+                          await _confirmDelete(ctx, [group], () {
                             appState.removeGroups([group]);
+                            Navigator.of(ctx).pop();
                           });
                         },
                       ),
