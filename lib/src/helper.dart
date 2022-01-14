@@ -19,14 +19,16 @@ Widget createTextButton(
         children: [
           Icon(
             icon,
-            color: isSelected ? selectedColor : null,
+            //color: isSelected ? selectedColor : null,
           ),
           const SizedBox(
             width: 8,
           ),
           Text(
             text,
-            style: isSelected ? TextStyle(color: selectedColor) : null,
+            style: isSelected
+                ? const TextStyle(fontWeight: FontWeight.w800)
+                : null,
           ),
         ],
       ),

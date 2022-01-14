@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -368,145 +369,188 @@ class _GroupListState extends State<GroupList> {
             ),
           ],
         ),
-        OnBuilder(
-          listenTo: appState.groups,
-          builder: () {
-            if (appState.groups.state.isEmpty) {
-              return Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.groups_outlined),
-                      Text(
-                        "No groups, please add groups",
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              return SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: OnReactive(
-                  () => DataTable(
-                    showCheckboxColumn: true,
-                    columns: [
-                      DataColumn(
-                        label: Text(
-                          'Name',
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                      ),
-                      DataColumn(
-                          label: Text(
-                        'Account No.',
-                        style: Theme.of(context).textTheme.button,
-                      )),
-                      DataColumn(
-                        label: Text(
-                          'Leader Name',
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          labelTel,
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Registration Date',
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Action',
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                      ),
-                    ],
-                    rows: [
-                      for (var group in appState.groups.state)
-                        DataRow(
-                          onSelectChanged: (b) {
-                            if (b != null) {
-                              b
-                                  ? selectedGroup.state.add(group)
-                                  : selectedGroup.state.remove(group);
-                              selectedGroup.notify();
-                            }
-                          },
-                          selected: selectedGroup.state.contains(group),
-                          key: ValueKey(group.id),
-                          cells: [
-                            DataCell(
-                              Text(group.name),
-                            ),
-                            DataCell(
-                              Text(group.accountNumber),
-                            ),
-                            DataCell(
-                              Text(group.leaderName ?? ""),
-                            ),
-                            DataCell(
-                              Text(group.phoneNumber ?? ""),
-                            ),
-                            DataCell(
-                              Text(group.registrationDate != null
-                                  ? DateFormat.yMMMd()
-                                      .format(group.registrationDate!)
-                                  : ''),
-                            ),
-                            DataCell(
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () {
-                                      _editGroup(context, group);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      _confirmDelete(context, [group], () {
-                                        appState.removeGroups([group]);
-                                        selectedGroup.setState(
-                                          (s) => s
-                                              .where((element) =>
-                                                  element.id != group.id)
-                                              .toList(),
-                                        );
-                                        Navigator.of(context).pop();
-                                      });
-                                    },
-                                  ),
-                                  if (group.latitude != null &&
-                                      group.longitude != null)
-                                    IconButton(
-                                      icon: const Icon(Icons.location_pin),
-                                      onPressed: () async {
-                                        var url =
-                                            'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
-                                        await launch(url);
-                                      },
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            }
-          },
+        const SizedBox(
+          height: 8,
         ),
+        Expanded(
+          child: ResponsiveBuilder(builder: (context, size) {
+            if (size.isMobile) {
+              return _groupListMobile(context);
+            } else {
+              return _groupListDesktop(context);
+            }
+          }),
+        )
       ],
+    );
+  }
+
+  Widget _groupListMobile(BuildContext context) {
+    return OnBuilder(
+        listenTo: appState.groups,
+        builder: () {
+          return ListView.separated(
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                var group = appState.groups.state[index];
+                return ListTile(
+                  title: Text(group.name),
+                  subtitle: Text(group.accountNumber),
+                  trailing: group.latitude != null && group.longitude != null
+                      ? IconButton(
+                          icon: const Icon(Icons.location_pin),
+                          onPressed: () {
+                            var url =
+                                'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
+                            launch(url);
+                          },
+                        )
+                      : null,
+                  onTap: () {
+                    _editGroup(context, group);
+                  },
+                );
+              },
+              itemCount: appState.groups.state.length);
+        });
+  }
+
+  Widget _groupListDesktop(BuildContext context) {
+    return OnBuilder(
+      listenTo: appState.groups,
+      builder: () {
+        if (appState.groups.state.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.groups_outlined),
+                Text(
+                  "No groups, please add groups",
+                ),
+              ],
+            ),
+          );
+        } else {
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: OnReactive(
+              () => DataTable(
+                showCheckboxColumn: true,
+                columns: [
+                  DataColumn(
+                    label: Text(
+                      'Name',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                  ),
+                  DataColumn(
+                      label: Text(
+                    'Account No.',
+                    style: Theme.of(context).textTheme.button,
+                  )),
+                  DataColumn(
+                    label: Text(
+                      'Leader Name',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      labelTel,
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Registration Date',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Action',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                  ),
+                ],
+                rows: [
+                  for (var group in appState.groups.state)
+                    DataRow(
+                      onSelectChanged: (b) {
+                        if (b != null) {
+                          b
+                              ? selectedGroup.state.add(group)
+                              : selectedGroup.state.remove(group);
+                          selectedGroup.notify();
+                        }
+                      },
+                      selected: selectedGroup.state.contains(group),
+                      key: ValueKey(group.id),
+                      cells: [
+                        DataCell(
+                          Text(group.name),
+                        ),
+                        DataCell(
+                          Text(group.accountNumber),
+                        ),
+                        DataCell(
+                          Text(group.leaderName ?? ""),
+                        ),
+                        DataCell(
+                          Text(group.phoneNumber ?? ""),
+                        ),
+                        DataCell(
+                          Text(group.registrationDate != null
+                              ? DateFormat.yMMMd()
+                                  .format(group.registrationDate!)
+                              : ''),
+                        ),
+                        DataCell(
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  _editGroup(context, group);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _confirmDelete(context, [group], () {
+                                    appState.removeGroups([group]);
+                                    selectedGroup.setState(
+                                      (s) => s
+                                          .where((element) =>
+                                              element.id != group.id)
+                                          .toList(),
+                                    );
+                                    Navigator.of(context).pop();
+                                  });
+                                },
+                              ),
+                              if (group.latitude != null &&
+                                  group.longitude != null)
+                                IconButton(
+                                  icon: const Icon(Icons.location_pin),
+                                  onPressed: () async {
+                                    var url =
+                                        'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
+                                    await launch(url);
+                                  },
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 
