@@ -8,7 +8,6 @@ Widget createTextButton(
   VoidCallback onPressed, {
   bool isSelected = false,
 }) {
-  final selectedColor = Theme.of(context).buttonTheme.colorScheme?.primary;
   return InkWell(
     onTap: onPressed,
     child: Container(
@@ -85,57 +84,56 @@ List<Widget> createNavMenus(
 }
 
 Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
-    return Drawer(
-      child: ListView(
-        children: [
-          ...navMenus,
-          ListTile(
-            title: Text('Logout'),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  AppBar createAppBar(List<Widget> navMenus) {
-    return AppBar(
-      leading: Icon(Icons.money),
-      title: Text('Group Loan'),
-      centerTitle: false,
-      actions: [
-        ResponsiveBuilder(
-          builder: (context, sizingInformation) {
-            final paddingRight = EdgeInsets.only(right: 10);
-            if (sizingInformation.deviceScreenType ==
-                DeviceScreenType.desktop) {
-              return Container(
-                padding: paddingRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: navMenus,
-                ),
-              );
-            } else {
-              return Container(
-                padding: paddingRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.menu),
-                      onPressed: () {
-                        Scaffold.of(context).openEndDrawer();
-                      },
-                    ),
-                  ],
-                ),
-              );
-            }
+  return Drawer(
+    child: ListView(
+      children: [
+        ...navMenus,
+        ListTile(
+          title: const Text('Logout'),
+          onTap: () {
+            Navigator.of(context).pop();
           },
         ),
       ],
-    );
-  }
+    ),
+  );
+}
+
+AppBar createAppBar(List<Widget> navMenus) {
+  return AppBar(
+    leading: const Icon(Icons.money),
+    title: const Text('Group Loan'),
+    centerTitle: false,
+    actions: [
+      ResponsiveBuilder(
+        builder: (context, sizingInformation) {
+          const paddingRight = EdgeInsets.only(right: 10);
+          if (sizingInformation.deviceScreenType == DeviceScreenType.desktop) {
+            return Container(
+              padding: paddingRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: navMenus,
+              ),
+            );
+          } else {
+            return Container(
+              padding: paddingRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      ),
+    ],
+  );
+}
