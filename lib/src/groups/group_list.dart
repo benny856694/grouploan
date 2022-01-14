@@ -1,5 +1,6 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:intl/intl.dart';
@@ -393,22 +394,38 @@ class _GroupListState extends State<GroupList> {
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
                 var group = appState.groups.state[index];
-                return ListTile(
-                  title: Text(group.name),
-                  subtitle: Text(group.accountNumber),
-                  trailing: group.latitude != null && group.longitude != null
-                      ? IconButton(
-                          icon: const Icon(Icons.location_pin),
-                          onPressed: () {
-                            var url =
-                                'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
-                            launch(url);
+                return Slidable(
+                  endActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    children: [
+                      SlidableAction(
+                        label: 'Delete',
+                        foregroundColor: Colors.red,
+                        icon: Icons.delete,
+                        onPressed: (context) async {
+                          await _confirmDelete(context, [group], () {
+                            appState.removeGroups([group]);
+                          });
+                        },
+                      ),
+                      if (group.latitude != null && group.latitude != null)
+                        SlidableAction(
+                          label: 'View on Map',
+                          icon: Icons.location_pin,
+                          onPressed: (context) async {
+                            var url = _getGoogleMapUrl(group);
+                            await launch(url);
                           },
-                        )
-                      : null,
-                  onTap: () {
-                    _editGroup(context, group);
-                  },
+                        ),
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(group.name),
+                    subtitle: Text(group.accountNumber),
+                    onTap: () {
+                      _editGroup(context, group);
+                    },
+                  ),
                 );
               },
               itemCount: appState.groups.state.length);
@@ -535,8 +552,7 @@ class _GroupListState extends State<GroupList> {
                                 IconButton(
                                   icon: const Icon(Icons.location_pin),
                                   onPressed: () async {
-                                    var url =
-                                        'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
+                                    String url = _getGoogleMapUrl(group);
                                     await launch(url);
                                   },
                                 ),
@@ -552,6 +568,12 @@ class _GroupListState extends State<GroupList> {
         }
       },
     );
+  }
+
+  String _getGoogleMapUrl(Group group) {
+    var url =
+        'https://www.google.com/maps/search/?api=1&query=${group.latitude},${group.longitude}';
+    return url;
   }
 
   Future<dynamic> _editGroup(BuildContext context, Group group) {
