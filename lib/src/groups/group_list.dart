@@ -475,7 +475,10 @@ class _GroupsState extends State<Groups> {
                               Navigator.of(context).pop();
                             });
                           },
-                    icon: const Icon(Icons.delete),
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
                     label: const Text("Delete"),
                   );
                 },
@@ -600,7 +603,10 @@ class _GroupsState extends State<Groups> {
                                         },
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.delete),
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
                                         onPressed: () {
                                           _confirmDelete(context, [group], () {
                                             appState.removeGroups([group]);
