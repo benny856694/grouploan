@@ -365,76 +365,135 @@ class _GroupsState extends State<Groups> {
                   name += ' (${group.accountNumber})';
                 }
 
-                titleRow.add(Text(name));
-
+                var subTitleColor = Colors.grey;
+                titleRow.add(
+                  Text(
+                    name,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                );
+                var subtitle = <Widget>[];
                 if (group.leaderName?.isNotEmpty == true) {
-                  titleRow.add(
-                    SizedBox(
-                      width: 16,
-                    ),
-                  );
-                  titleRow.add(Icon(
+                  subtitle.add(Icon(
                     Icons.person,
                     size: 16,
+                    color: subTitleColor,
                   ));
-                  titleRow.add(SizedBox(width: 4));
-                  titleRow.add(Text(group.leaderName!));
+                  subtitle.add(const SizedBox(width: 4));
+                  subtitle.add(Text(group.leaderName!,
+                      style: TextStyle(
+                        color: subTitleColor,
+                      )));
                 }
                 if (group.phoneNumber?.isNotEmpty == true) {
-                  titleRow.add(
-                    SizedBox(
+                  subtitle.add(
+                    const SizedBox(
                       width: 8,
                     ),
                   );
-                  titleRow.add(Icon(
+                  subtitle.add(Icon(
                     Icons.phone,
                     size: 16,
+                    color: subTitleColor,
                   ));
-                  titleRow.add(SizedBox(width: 4));
-                  titleRow.add(Text(group.phoneNumber!));
+                  subtitle.add(const SizedBox(width: 4));
+                  subtitle.add(Text(group.phoneNumber!,
+                      style: TextStyle(
+                        color: subTitleColor,
+                      )));
                 }
-                var subtitle = "";
+                var subtitle2 = <Widget>[];
                 if (group.registrationDate != null) {
-                  subtitle +=
-                      Constants.dateFormat.format(group.registrationDate!);
-                }
-                return Slidable(
-                  startActionPane: ActionPane(
-                    motion: const ScrollMotion(),
-                    children: [
-                      SlidableAction(
-                        label: 'Delete',
-                        foregroundColor: Colors.red,
-                        icon: Icons.delete,
-                        onPressed: (context) async {
-                          await _confirmDelete(ctx, [group], () {
-                            appState.removeGroups([group]);
-                            Navigator.of(ctx).pop();
-                            RM.scaffold.showSnackBar(SnackBar(
-                              content: Text('Group "${group.name}" deleted'),
-                            ));
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    title: Row(
-                      children: titleRow,
+                  subtitle2.add(
+                    const SizedBox(
+                      width: 4,
                     ),
-                    subtitle: Text(subtitle),
-                    trailing: group.latitude != null && group.longitude != null
-                        ? IconButton(
-                            icon: const Icon(Icons.location_pin),
-                            onPressed: () async {
-                              var url = _getGoogleMapUrl(group);
-                              await launch(url);
-                            },
-                          )
-                        : null,
-                    onTap: () {
-                      _editGroup(context, group);
-                    },
+                  );
+                  subtitle2.add(
+                    Text(Constants.dateFormat.format(group.registrationDate!),
+                        style: TextStyle(
+                          color: subTitleColor,
+                        )),
+                  );
+                }
+
+                if (group.latitude != null && group.longitude != null) {
+                  subtitle2.add(
+                    const SizedBox(
+                      width: 8,
+                    ),
+                  );
+                  subtitle2.add(Icon(
+                    Icons.location_on,
+                    size: 16,
+                    color: subTitleColor,
+                  ));
+                }
+
+                return InkWell(
+                  onTap: () {},
+                  child: Slidable(
+                    startActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          label: 'View On Map',
+                          icon: Icons.location_on,
+                          onPressed: (context) async {
+                            var url = _getGoogleMapUrl(group);
+                            await launch(url);
+                          },
+                        ),
+                        SlidableAction(
+                          label: 'Edit',
+                          icon: Icons.edit,
+                          onPressed: (context) {
+                            _editGroup(context, group);
+                          },
+                        ),
+                        SlidableAction(
+                          label: 'Delete',
+                          foregroundColor: Colors.red,
+                          icon: Icons.delete,
+                          onPressed: (context) async {
+                            await _confirmDelete(ctx, [group], () {
+                              appState.removeGroups([group]);
+                              Navigator.of(ctx).pop();
+                              RM.scaffold.showSnackBar(SnackBar(
+                                content: Text('Group "${group.name}" deleted'),
+                              ));
+                            });
+                          },
+                        ),
+
+                        //edit
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: titleRow,
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: subtitle,
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Row(
+                            children: subtitle2,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               },
@@ -603,6 +662,16 @@ class _GroupsState extends State<Groups> {
                                 DataCell(
                                   Row(
                                     children: [
+                                      if (group.latitude != null &&
+                                          group.longitude != null)
+                                        IconButton(
+                                          icon: const Icon(Icons.location_pin),
+                                          onPressed: () async {
+                                            String url =
+                                                _getGoogleMapUrl(group);
+                                            await launch(url);
+                                          },
+                                        ),
                                       IconButton(
                                         icon: const Icon(Icons.edit),
                                         onPressed: () {
@@ -627,16 +696,6 @@ class _GroupsState extends State<Groups> {
                                           });
                                         },
                                       ),
-                                      if (group.latitude != null &&
-                                          group.longitude != null)
-                                        IconButton(
-                                          icon: const Icon(Icons.location_pin),
-                                          onPressed: () async {
-                                            String url =
-                                                _getGoogleMapUrl(group);
-                                            await launch(url);
-                                          },
-                                        ),
                                     ],
                                   ),
                                 ),

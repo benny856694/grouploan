@@ -117,21 +117,7 @@ AppBar createAppBar(List<Widget> navMenus) {
               ),
             );
           } else {
-            return SizedBox.shrink();
-            return Container(
-              padding: paddingRight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {
-                      Scaffold.of(context).openEndDrawer();
-                    },
-                  ),
-                ],
-              ),
-            );
+            return const SizedBox.shrink();
           }
         },
       ),
