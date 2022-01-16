@@ -437,14 +437,15 @@ class _GroupsState extends State<Groups> {
                     startActionPane: ActionPane(
                       motion: const ScrollMotion(),
                       children: [
-                        SlidableAction(
-                          label: 'View On Map',
-                          icon: Icons.location_on,
-                          onPressed: (context) async {
-                            var url = _getGoogleMapUrl(group);
-                            await launch(url);
-                          },
-                        ),
+                        if (group.latitude != null && group.longitude != null)
+                          SlidableAction(
+                            label: 'View On Map',
+                            icon: Icons.location_on,
+                            onPressed: (context) async {
+                              var url = _getGoogleMapUrl(group);
+                              await launch(url);
+                            },
+                          ),
                         SlidableAction(
                           label: 'Edit',
                           icon: Icons.edit,
