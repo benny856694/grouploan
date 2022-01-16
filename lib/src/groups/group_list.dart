@@ -323,7 +323,9 @@ class _GroupsState extends State<Groups> {
     var navMenu = createNavMenus(context, selectedButton: Constants.groups);
     return Scaffold(
       appBar: createAppBar(navMenu),
-      endDrawer: createEndDrawer(navMenu, context),
+      drawer: deviceType == DeviceScreenType.mobile
+          ? createEndDrawer(navMenu, context)
+          : null,
       body: ResponsiveBuilder(builder: (context, size) {
         if (size.isMobile) {
           return _groupListMobile(context);
@@ -357,20 +359,44 @@ class _GroupsState extends State<Groups> {
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
                 var group = appState.groups.state[index];
-                var title = group.name;
+                var titleRow = <Widget>[];
+                var name = group.name;
                 if (group.accountNumber.isNotEmpty) {
-                  title += ' (${group.accountNumber})';
+                  name += ' (${group.accountNumber})';
                 }
 
+                titleRow.add(Text(name));
+
                 if (group.leaderName?.isNotEmpty == true) {
-                  title += ' - ${group.leaderName}';
+                  titleRow.add(
+                    SizedBox(
+                      width: 16,
+                    ),
+                  );
+                  titleRow.add(Icon(
+                    Icons.person,
+                    size: 16,
+                  ));
+                  titleRow.add(SizedBox(width: 4));
+                  titleRow.add(Text(group.leaderName!));
                 }
                 if (group.phoneNumber?.isNotEmpty == true) {
-                  title += ' (${group.phoneNumber})';
+                  titleRow.add(
+                    SizedBox(
+                      width: 8,
+                    ),
+                  );
+                  titleRow.add(Icon(
+                    Icons.phone,
+                    size: 16,
+                  ));
+                  titleRow.add(SizedBox(width: 4));
+                  titleRow.add(Text(group.phoneNumber!));
                 }
                 var subtitle = "";
                 if (group.registrationDate != null) {
-                  subtitle += group.registrationDate.toString();
+                  subtitle +=
+                      Constants.dateFormat.format(group.registrationDate!);
                 }
                 return Slidable(
                   startActionPane: ActionPane(
@@ -390,31 +416,12 @@ class _GroupsState extends State<Groups> {
                           });
                         },
                       ),
-                      if (group.latitude != null && group.latitude != null)
-                        SlidableAction(
-                          label: 'View on Map',
-                          icon: Icons.location_pin,
-                          onPressed: (context) async {
-                            var url = _getGoogleMapUrl(group);
-                            await launch(url);
-                          },
-                        ),
                     ],
                   ),
                   child: ListTile(
-                    leading: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        _confirmDelete(ctx, [group], () {
-                          appState.removeGroups([group]);
-                          Navigator.of(ctx).pop();
-                          RM.scaffold.showSnackBar(SnackBar(
-                            content: Text('Group "${group.name}" deleted'),
-                          ));
-                        });
-                      },
+                    title: Row(
+                      children: titleRow,
                     ),
-                    title: Text(title),
                     subtitle: Text(subtitle),
                     trailing: group.latitude != null && group.longitude != null
                         ? IconButton(
@@ -589,7 +596,7 @@ class _GroupsState extends State<Groups> {
                                 ),
                                 DataCell(
                                   Text(group.registrationDate != null
-                                      ? DateFormat.yMMMd()
+                                      ? Constants.dateFormat
                                           .format(group.registrationDate!)
                                       : ''),
                                 ),

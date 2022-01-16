@@ -101,7 +101,7 @@ Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
 
 AppBar createAppBar(List<Widget> navMenus) {
   return AppBar(
-    leading: const Icon(Icons.money),
+    //leading: const Icon(Icons.money),
     title: const Text('Group Loan'),
     centerTitle: false,
     actions: [
@@ -117,6 +117,7 @@ AppBar createAppBar(List<Widget> navMenus) {
               ),
             );
           } else {
+            return SizedBox.shrink();
             return Container(
               padding: paddingRight,
               child: Row(
