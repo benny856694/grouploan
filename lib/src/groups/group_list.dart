@@ -4,7 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
-import 'package:intl/intl.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -362,7 +361,7 @@ class _GroupsState extends State<Groups> {
                 var titleRow = <Widget>[];
                 var name = group.name;
                 if (group.accountNumber.isNotEmpty) {
-                  name += ' (${group.accountNumber})';
+                  name += ' | ${group.accountNumber}';
                 }
 
                 var subTitleColor = Colors.grey;
@@ -439,7 +438,6 @@ class _GroupsState extends State<Groups> {
                       children: [
                         if (group.latitude != null && group.longitude != null)
                           SlidableAction(
-                            label: 'View On Map',
                             icon: Icons.location_on,
                             onPressed: (context) async {
                               var url = _getGoogleMapUrl(group);
@@ -447,14 +445,12 @@ class _GroupsState extends State<Groups> {
                             },
                           ),
                         SlidableAction(
-                          label: 'Edit',
                           icon: Icons.edit,
                           onPressed: (context) {
                             _editGroup(context, group);
                           },
                         ),
                         SlidableAction(
-                          label: 'Delete',
                           foregroundColor: Colors.red,
                           icon: Icons.delete,
                           onPressed: (context) async {

@@ -15,7 +15,7 @@
 - Customer ID
 - Customer Name
 - Customer Telephone
-- Type (Savings /Withdrawal)
+- Type (Savings / Withdrawal)
 - Amount
 - Transacted By
 - Approved (Yes or No)
