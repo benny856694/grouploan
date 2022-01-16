@@ -354,11 +354,6 @@ class _GroupsState extends State<Groups> {
     return OnBuilder(
         listenTo: appState.groups,
         builder: () {
-          if (appState.groups.isWaiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
           return ListView.separated(
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {

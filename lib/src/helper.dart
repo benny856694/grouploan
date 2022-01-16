@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:group_loan/main.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
 Widget createTextButton(
   BuildContext context,
@@ -102,7 +104,26 @@ Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
 AppBar createAppBar(List<Widget> navMenus) {
   return AppBar(
     //leading: const Icon(Icons.money),
-    title: const Text('Group Loan'),
+    title: Row(
+      children: [
+        const Text('Group Loan'),
+        const SizedBox(
+          width: 8,
+        ),
+        OnReactive(
+          () {
+            return appState.groups.isWaiting
+                ? const SizedBox.square(
+                    dimension: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const SizedBox.shrink();
+          },
+        ),
+      ],
+    ),
     centerTitle: false,
     actions: [
       ResponsiveBuilder(
