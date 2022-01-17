@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:csv/csv.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:download/download.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:group_loan/constants.dart';
@@ -11,7 +12,6 @@ import 'package:group_loan/src/model/group.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:html' as html;
 
 import '../helper.dart';
 
@@ -800,24 +800,9 @@ class _GroupsState extends State<Groups> {
     }).toList();
     lines.insert(0, titleRow);
 
-    //create csv
     var csv = const ListToCsvConverter().convert(lines);
 
-// prepare
-    final bytes = utf8.encode(csv);
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..style.display = 'none'
-      ..download = 'Groups.csv';
-    html.document.body!.children.add(anchor);
-
-// download
-    anchor.click();
-
-// cleanup
-    html.document.body!.children.remove(anchor);
-    html.Url.revokeObjectUrl(url);
+    final stream = Stream.fromIterable(utf8.encode(csv));
+    download(stream, 'Groups-Export.csv');
   }
 }

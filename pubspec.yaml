@@ -25,6 +25,7 @@ dependencies:
   responsive_builder: ^0.4.1
   flutter_slidable: ^1.2.0
   csv: ^5.0.1
+  download: ^0.0.1+1
 
 dev_dependencies:
   flutter_test:
