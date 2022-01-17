@@ -230,7 +230,7 @@ class _GroupsState extends State<Groups> {
             _buildCreateButton(
               onPressed: () async {
                 var group = _getGroup();
-                await appState.addGroup(group);
+                await appState.groups.crud.create(group);
                 if (!appState.groups.hasError) {
                   Navigator.pop(context);
                 }
@@ -241,7 +241,7 @@ class _GroupsState extends State<Groups> {
               isCreateMore: true,
               onPressed: () async {
                 var group = _getGroup();
-                await appState.addGroup(group);
+                await appState.groups.crud.create(group);
                 if (!appState.groups.hasError) {
                   clear();
                   nameFocusNode.requestFocus();
@@ -254,7 +254,10 @@ class _GroupsState extends State<Groups> {
               var g = _getGroup();
               if (group != null) {
                 g.id = group.id;
-                appState.updateGroup(g);
+                appState.groups.crud.update(
+                  where: (gp) => gp.id == group.id,
+                  set: (gp) => g,
+                );
               }
               Navigator.of(context).pop();
             },
@@ -319,7 +322,6 @@ class _GroupsState extends State<Groups> {
   @override
   void initState() {
     super.initState();
-    appState.loadGroups();
   }
 
   @override
@@ -461,7 +463,8 @@ class _GroupsState extends State<Groups> {
                           icon: Icons.delete,
                           onPressed: (context) async {
                             await _confirmDelete(ctx, [group], () {
-                              appState.removeGroups([group]);
+                              appState.groups.crud
+                                  .delete(where: (gp) => gp.id == group.id);
                               Navigator.of(ctx).pop();
                               RM.scaffold.showSnackBar(SnackBar(
                                 content: Text('Group "${group.name}" deleted'),
@@ -549,7 +552,9 @@ class _GroupsState extends State<Groups> {
                         : () async {
                             await _confirmDelete(context, selectedGroup.state,
                                 () {
-                              appState.removeGroups(selectedGroup.state);
+                              appState.groups.crud.delete(
+                                where: (gp) => selectedGroup.state.contains(gp),
+                              );
                               selectedGroup.setState((s) => <Group>[]);
                               Navigator.of(context).pop();
                             });
@@ -698,7 +703,8 @@ class _GroupsState extends State<Groups> {
                                         ),
                                         onPressed: () {
                                           _confirmDelete(context, [group], () {
-                                            appState.removeGroups([group]);
+                                            appState.groups.crud.delete(
+                                                where: (gp) => gp == group);
                                             selectedGroup.setState(
                                               (s) => s
                                                   .where((element) =>
