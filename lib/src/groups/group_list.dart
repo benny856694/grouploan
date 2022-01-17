@@ -1,18 +1,24 @@
+import 'dart:convert';
+
+import 'package:csv/csv.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
+import 'package:group_loan/src/model/app.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:html' as html;
 
 import '../helper.dart';
 
 const labelTel = 'Tel.';
 const labelAddGroup = 'Add';
 const labelEditGroup = 'Edit';
+const labelDownloadAsCsv = 'Download as CSV';
 
 class Groups extends StatefulWidget {
   const Groups({Key? key}) : super(key: key);
@@ -524,6 +530,16 @@ class _GroupsState extends State<Groups> {
               const SizedBox(
                 width: 8,
               ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _downloadAsCsv(appState.groups.state);
+                },
+                label: const Text(labelDownloadAsCsv),
+                icon: const Icon(Icons.download),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
               OnBuilder(
                 listenTo: selectedGroup,
                 builder: () {
@@ -759,5 +775,49 @@ class _GroupsState extends State<Groups> {
         );
       },
     );
+  }
+
+  void _downloadAsCsv(List<Group> state) {
+    //create title row
+    var titleRow = List<String>.from([
+      'Name',
+      'Account Number',
+      'Leader Name',
+      'Phone Number',
+      'Registration Date'
+    ]);
+    var lines = state.map((e) {
+      //convert to list of string
+      return [
+        e.name,
+        '="${e.accountNumber}"',
+        e.leaderName,
+        '="${e.phoneNumber}"',
+        e.registrationDate != null
+            ? Constants.dateFormat.format(e.registrationDate!)
+            : ''
+      ];
+    }).toList();
+    lines.insert(0, titleRow);
+
+    //create csv
+    var csv = const ListToCsvConverter().convert(lines);
+
+// prepare
+    final bytes = utf8.encode(csv);
+    final blob = html.Blob([bytes]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = 'Groups.csv';
+    html.document.body!.children.add(anchor);
+
+// download
+    anchor.click();
+
+// cleanup
+    html.document.body!.children.remove(anchor);
+    html.Url.revokeObjectUrl(url);
   }
 }

@@ -85,6 +85,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.1"
+  csv:
+    dependency: "direct main"
+    description:
+      name: csv
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.0.1"
   date_time_picker:
     dependency: "direct main"
     description:
