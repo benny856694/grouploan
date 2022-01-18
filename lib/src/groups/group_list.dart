@@ -372,12 +372,10 @@ class _GroupsState extends State<Groups> {
                   name += ' | ${group.accountNumber}';
                 }
 
-                var subTitleColor = Colors.grey;
                 titleRow.add(
                   Text(
                     name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                 );
                 var subtitle = <Widget>[];
@@ -385,13 +383,13 @@ class _GroupsState extends State<Groups> {
                   subtitle.add(Icon(
                     Icons.person,
                     size: 16,
-                    color: subTitleColor,
+                    color: Theme.of(context).hintColor,
                   ));
                   subtitle.add(const SizedBox(width: 4));
-                  subtitle.add(Text(group.leaderName!,
-                      style: TextStyle(
-                        color: subTitleColor,
-                      )));
+                  subtitle.add(
+                    Text(group.leaderName!,
+                        style: Theme.of(context).textTheme.subtitle2),
+                  );
                 }
                 if (group.phoneNumber?.isNotEmpty == true) {
                   subtitle.add(
@@ -402,13 +400,13 @@ class _GroupsState extends State<Groups> {
                   subtitle.add(Icon(
                     Icons.phone,
                     size: 16,
-                    color: subTitleColor,
+                    color: Theme.of(context).hintColor,
                   ));
                   subtitle.add(const SizedBox(width: 4));
-                  subtitle.add(Text(group.phoneNumber!,
-                      style: TextStyle(
-                        color: subTitleColor,
-                      )));
+                  subtitle.add(
+                    Text(group.phoneNumber!,
+                        style: Theme.of(context).textTheme.subtitle2),
+                  );
                 }
                 var subtitle2 = <Widget>[];
                 if (group.registrationDate != null) {
@@ -419,9 +417,7 @@ class _GroupsState extends State<Groups> {
                   );
                   subtitle2.add(
                     Text(Constants.dateFormat.format(group.registrationDate!),
-                        style: TextStyle(
-                          color: subTitleColor,
-                        )),
+                        style: Theme.of(context).textTheme.subtitle2),
                   );
                 }
 
@@ -434,7 +430,7 @@ class _GroupsState extends State<Groups> {
                   subtitle2.add(Icon(
                     Icons.location_on,
                     size: 16,
-                    color: subTitleColor,
+                    color: Theme.of(context).hintColor,
                   ));
                 }
 
