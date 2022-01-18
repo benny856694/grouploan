@@ -3,6 +3,7 @@ import 'dart:convert';
 class Group {
   String id = '';
   String name = '';
+  String get nameLowerCase => name.toLowerCase();
   String accountNumber = '';
   String? description;
   String? phoneNumber;
@@ -50,6 +51,7 @@ class Group {
     return {
       'id': id,
       'name': name,
+      'nameLowerCase': nameLowerCase,
       'accountNumber': accountNumber,
       'description': description,
       'phoneNumber': phoneNumber,

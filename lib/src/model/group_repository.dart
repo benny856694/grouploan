@@ -6,7 +6,8 @@ import 'group.dart';
 class GroupParam {
   final int? countToRead;
   final String? id;
-  GroupParam({this.id, this.countToRead});
+  final String? name;
+  GroupParam({this.id, this.name, this.countToRead});
 }
 
 class GroupRepository implements ICRUD<Group, GroupParam> {
@@ -40,6 +41,9 @@ class GroupRepository implements ICRUD<Group, GroupParam> {
       'registrationDate',
       descending: true,
     );
+    if (param?.name != null) {
+      query.where('name', arrayContains: param!.name!);
+    }
     if (param?.countToRead != null) {
       query.limit(param!.countToRead!);
     }
