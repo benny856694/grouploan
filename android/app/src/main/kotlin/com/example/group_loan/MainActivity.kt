@@ -1,4 +1,4 @@
-package com.example.group_loan
+package com.notifyafrica.group_loan
 
 import io.flutter.embedding.android.FlutterActivity
 
