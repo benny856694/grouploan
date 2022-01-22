@@ -15,16 +15,17 @@ class GroupRepository implements ICRUD<Group, GroupParam> {
 
   @override
   Future<Group> create(Group item, GroupParam? param) async {
-    final group = await _groupsCollection.add(item.toMap());
-    item.id = group.id;
+    final doc = _groupsCollection.doc(item.id);
+    doc.set(item.toMap());
     return item;
   }
 
   @override
-  Future delete(List<Group> items, GroupParam? param) async {
+  Future delete(List<Group> items, GroupParam? param) {
     for (final item in items) {
-      await _groupsCollection.doc(item.id).delete();
+      _groupsCollection.doc(item.id).delete();
     }
+    return Future.value();
   }
 
   @override
@@ -63,4 +64,6 @@ class GroupRepository implements ICRUD<Group, GroupParam> {
       await _groupsCollection.doc(item.id).update(item.toMap());
     }
   }
+
+  String get nextDocId => _groupsCollection.doc().id;
 }
