@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:group_loan/src/auth/authgate.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 
 import 'groups/group_list.dart';
@@ -81,7 +82,7 @@ class MyApp extends StatelessWidget {
                   case Groups.routeName:
                     return const Groups();
                   default:
-                    return const Groups();
+                    return const AuthGate();
                 }
               },
             );
