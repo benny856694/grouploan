@@ -6,7 +6,8 @@ import 'group.dart';
 class GroupParam {
   final int? countToRead;
   final String? id;
-  GroupParam({this.id, this.countToRead});
+  final String? name;
+  GroupParam({this.id, this.name, this.countToRead});
 }
 
 class GroupRepository implements ICRUD<Group, GroupParam> {
@@ -14,16 +15,17 @@ class GroupRepository implements ICRUD<Group, GroupParam> {
 
   @override
   Future<Group> create(Group item, GroupParam? param) async {
-    final group = await _groupsCollection.add(item.toMap());
-    item.id = group.id;
+    final doc = _groupsCollection.doc(item.id);
+    doc.set(item.toMap());
     return item;
   }
 
   @override
-  Future delete(List<Group> items, GroupParam? param) async {
+  Future delete(List<Group> items, GroupParam? param) {
     for (final item in items) {
-      await _groupsCollection.doc(item.id).delete();
+      _groupsCollection.doc(item.id).delete();
     }
+    return Future.value();
   }
 
   @override
@@ -40,6 +42,9 @@ class GroupRepository implements ICRUD<Group, GroupParam> {
       'registrationDate',
       descending: true,
     );
+    if (param?.name != null) {
+      query.where('name', arrayContains: param!.name!);
+    }
     if (param?.countToRead != null) {
       query.limit(param!.countToRead!);
     }
@@ -59,4 +64,6 @@ class GroupRepository implements ICRUD<Group, GroupParam> {
       await _groupsCollection.doc(item.id).update(item.toMap());
     }
   }
+
+  String get nextDocId => _groupsCollection.doc().id;
 }

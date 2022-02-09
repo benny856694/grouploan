@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:group_loan/main.dart';
+
 class Group {
   String id = '';
   String name = '';
+  String get nameLowerCase => name.toLowerCase();
   String accountNumber = '';
   String? description;
   String? phoneNumber;
@@ -21,6 +24,30 @@ class Group {
     this.latitude,
     this.longitude,
   });
+
+  //auto generate id
+  factory Group.autoId({
+    String? name,
+    String? accountNumber,
+    String? description,
+    String? phoneNumber,
+    DateTime? registrationDate,
+    String? leaderName,
+    double? latitude,
+    double? longitude,
+  }) {
+    return Group(
+      id: appState.nextGroupId,
+      name: name ?? '',
+      accountNumber: accountNumber ?? '',
+      description: description,
+      phoneNumber: phoneNumber,
+      registrationDate: registrationDate,
+      leaderName: leaderName,
+      latitude: latitude,
+      longitude: longitude,
+    );
+  }
 
   Group copyWith({
     String? id,
@@ -50,6 +77,7 @@ class Group {
     return {
       'id': id,
       'name': name,
+      'nameLowerCase': nameLowerCase,
       'accountNumber': accountNumber,
       'description': description,
       'phoneNumber': phoneNumber,

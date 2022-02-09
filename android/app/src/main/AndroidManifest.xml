@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.group_loan">
+    package="com.notifyafrica.group_loan">
    <application
         android:label="group_loan"
         android:name="${applicationName}"

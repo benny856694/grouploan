@@ -8,6 +8,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
+import 'package:group_loan/src/model/group_repository.dart';
+import 'package:group_loan/src/widgets/empty.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -228,8 +230,10 @@ class _GroupsState extends State<Groups> {
           if (!isEdit)
             _buildCreateButton(
               onPressed: () async {
-                var group = _getGroup();
-                await appState.groups.crud.create(group);
+                var group = _getGroup()..id = appState.nextGroupId;
+                await appState.groups.crud.create(
+                  group,
+                );
                 if (!appState.groups.hasError) {
                   Navigator.pop(context);
                 }
@@ -239,8 +243,10 @@ class _GroupsState extends State<Groups> {
             _buildCreateButton(
               isCreateMore: true,
               onPressed: () async {
-                var group = _getGroup();
-                await appState.groups.crud.create(group);
+                var group = _getGroup()..id = appState.nextGroupId;
+                await appState.groups.crud.create(
+                  group,
+                );
                 if (!appState.groups.hasError) {
                   clear();
                   nameFocusNode.requestFocus();
@@ -361,7 +367,11 @@ class _GroupsState extends State<Groups> {
     return OnBuilder(
         listenTo: appState.groups,
         builder: () {
-          return ListView.separated(
+          //if empty
+          if (appState.groups.state.isEmpty) {
+            return const EmptyIndiator();
+          } else {
+            return ListView.separated(
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
                 var group = appState.groups.state[index];
@@ -371,12 +381,10 @@ class _GroupsState extends State<Groups> {
                   name += ' | ${group.accountNumber}';
                 }
 
-                var subTitleColor = Colors.grey;
                 titleRow.add(
                   Text(
                     name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                 );
                 var subtitle = <Widget>[];
@@ -384,13 +392,13 @@ class _GroupsState extends State<Groups> {
                   subtitle.add(Icon(
                     Icons.person,
                     size: 16,
-                    color: subTitleColor,
+                    color: Theme.of(context).hintColor,
                   ));
                   subtitle.add(const SizedBox(width: 4));
-                  subtitle.add(Text(group.leaderName!,
-                      style: TextStyle(
-                        color: subTitleColor,
-                      )));
+                  subtitle.add(
+                    Text(group.leaderName!,
+                        style: Theme.of(context).textTheme.subtitle2),
+                  );
                 }
                 if (group.phoneNumber?.isNotEmpty == true) {
                   subtitle.add(
@@ -401,13 +409,13 @@ class _GroupsState extends State<Groups> {
                   subtitle.add(Icon(
                     Icons.phone,
                     size: 16,
-                    color: subTitleColor,
+                    color: Theme.of(context).hintColor,
                   ));
                   subtitle.add(const SizedBox(width: 4));
-                  subtitle.add(Text(group.phoneNumber!,
-                      style: TextStyle(
-                        color: subTitleColor,
-                      )));
+                  subtitle.add(
+                    Text(group.phoneNumber!,
+                        style: Theme.of(context).textTheme.subtitle2),
+                  );
                 }
                 var subtitle2 = <Widget>[];
                 if (group.registrationDate != null) {
@@ -418,9 +426,7 @@ class _GroupsState extends State<Groups> {
                   );
                   subtitle2.add(
                     Text(Constants.dateFormat.format(group.registrationDate!),
-                        style: TextStyle(
-                          color: subTitleColor,
-                        )),
+                        style: Theme.of(context).textTheme.subtitle2),
                   );
                 }
 
@@ -433,7 +439,7 @@ class _GroupsState extends State<Groups> {
                   subtitle2.add(Icon(
                     Icons.location_on,
                     size: 16,
-                    color: subTitleColor,
+                    color: Theme.of(context).hintColor,
                   ));
                 }
 
@@ -502,7 +508,9 @@ class _GroupsState extends State<Groups> {
                   ),
                 );
               },
-              itemCount: appState.groups.state.length);
+              itemCount: appState.groups.state.length,
+            );
+          }
         });
   }
 
@@ -590,17 +598,7 @@ class _GroupsState extends State<Groups> {
               listenTo: appState.groups,
               builder: () {
                 if (appState.groups.state.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.groups_outlined),
-                        Text(
-                          "No groups, please add groups",
-                        ),
-                      ],
-                    ),
-                  );
+                  return const EmptyIndiator();
                 } else {
                   return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
@@ -703,7 +701,8 @@ class _GroupsState extends State<Groups> {
                                         onPressed: () {
                                           _confirmDelete(context, [group], () {
                                             appState.groups.crud.delete(
-                                                where: (gp) => gp == group);
+                                              where: (gp) => gp == group,
+                                            );
                                             selectedGroup.setState(
                                               (s) => s
                                                   .where((element) =>
