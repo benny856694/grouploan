@@ -26,6 +26,7 @@ dependencies:
   flutter_slidable: ^1.2.0
   csv: ^5.0.1
   download: ^0.0.1+1
+  flutterfire_ui: ^0.3.3
 
 dev_dependencies:
   flutter_test:

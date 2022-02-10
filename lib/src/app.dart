@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutterfire_ui/auth.dart';
+import 'package:group_loan/src/auth/authgate.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 
+import 'auth/signin.dart';
 import 'groups/group_list.dart';
 import 'sample_feature/sample_item_details_view.dart';
 import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -81,7 +85,9 @@ class MyApp extends StatelessWidget {
                   case Groups.routeName:
                     return const Groups();
                   default:
-                    return const Groups();
+                    return FirebaseAuth.instance.currentUser == null
+                        ? const SignIn()
+                        : const Groups();
                 }
               },
             );
