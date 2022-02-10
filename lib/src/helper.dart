@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
+import 'package:group_loan/src/app.dart';
+import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -9,9 +12,10 @@ Widget createTextButton(
   IconData icon,
   VoidCallback onPressed, {
   bool isSelected = false,
+  bool isDisabled = false,
 }) {
   return InkWell(
-    onTap: onPressed,
+    onTap: isDisabled ? null : onPressed,
     child: Container(
       //color: isSelected ? Theme.of(context).highlightColor : null,
       padding: const EdgeInsets.all(
@@ -48,18 +52,20 @@ List<Widget> createNavMenus(
       "Staff",
       Icons.person,
       () {
-        Navigator.pushNamed(context, '/staffs');
+        myNavigator.toReplacement(Staffs.routeName);
       },
       isSelected: selectedButton == 'Staff',
+      isDisabled: myNavigator.routeData.path == Staffs.routeName,
     ),
     createTextButton(
       context,
       "Groups",
       Icons.group,
       () {
-        Navigator.pushNamed(context, '/groups');
+        myNavigator.toReplacement(Constants.groupRoute);
       },
       isSelected: selectedButton == 'Groups',
+      isDisabled: myNavigator.routeData.path == Constants.groupRoute,
     ),
     createTextButton(
       context,

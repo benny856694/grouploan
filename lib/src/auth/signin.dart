@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:group_loan/src/app.dart';
 
 import '../groups/group_list.dart';
 
 class SignIn extends StatelessWidget {
+  static const routeName = '/signin';
+
   const SignIn({
     Key? key,
   }) : super(key: key);
@@ -55,9 +58,7 @@ class SignIn extends StatelessWidget {
       actions: [
         AuthStateChangeAction<SignedIn>(
           (context, _) {
-            Navigator.of(context).pushReplacementNamed(
-              Groups.routeName,
-            );
+            myNavigator.toReplacement(Groups.routeName);
           },
         ),
       ],
