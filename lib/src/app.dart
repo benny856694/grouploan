@@ -1,19 +1,13 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:group_loan/constants.dart';
-import 'package:group_loan/src/auth/authgate.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 import 'auth/signin.dart';
 import 'groups/group_list.dart';
-import 'sample_feature/sample_item_details_view.dart';
-import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 final myNavigator = RM.injectNavigator(
@@ -28,6 +22,7 @@ final myNavigator = RM.injectNavigator(
           routeData.path != Constants.signinRouteName) {
         return routeData.redirectTo(SignIn.routeName);
       }
+      return null;
     });
 
 /// The Widget that configures your application.

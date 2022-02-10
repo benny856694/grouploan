@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 
 // - Customer ID (auto-generated Numbers Only TimeStamp will be OK)
 //  - Name of Customer
