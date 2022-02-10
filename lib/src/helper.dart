@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/app.dart';
+import 'package:group_loan/src/auth/signin.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Widget createTextButton(
   BuildContext context,
@@ -88,21 +90,23 @@ List<Widget> createNavMenus(
       () {},
       isSelected: selectedButton == 'Settings',
     ),
+    if (FirebaseAuth.instance.currentUser != null)
+      createTextButton(
+        context,
+        'Logout',
+        Icons.logout,
+        () {
+          FirebaseAuth.instance.signOut();
+          myNavigator.toReplacement(SignIn.routeName);
+        },
+      ),
   ];
 }
 
 Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
   return Drawer(
     child: ListView(
-      children: [
-        ...navMenus,
-        ListTile(
-          title: const Text('Logout'),
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
+      children: navMenus,
     ),
   );
 }
