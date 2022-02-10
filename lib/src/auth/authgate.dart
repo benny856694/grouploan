@@ -13,11 +13,14 @@ class AuthGate extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const SignInScreen(
-            providerConfigs: [
+          return SignInScreen(
+            providerConfigs: const [
               EmailProviderConfiguration(),
             ],
             showAuthActionSwitch: false,
+            actions: [AuthStateChangeAction<SignedIn>((context, _) {
+              
+            })],
           );
         }
 
