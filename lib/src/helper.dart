@@ -114,12 +114,28 @@ Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
           ),
-          child: Text(
-            FirebaseAuth.instance.currentUser?.email ?? "Group Loan",
-            style: const TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Group Loan",
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              if (FirebaseAuth.instance.currentUser != null)
+                Text(
+                  FirebaseAuth.instance.currentUser!.email ?? "",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+            ],
           ),
         ),
         ...navMenus,
