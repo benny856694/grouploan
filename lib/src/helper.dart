@@ -91,14 +91,17 @@ List<Widget> createNavMenus(
       isSelected: selectedButton == 'Settings',
     ),
     if (FirebaseAuth.instance.currentUser != null)
-      createTextButton(
-        context,
-        'Logout',
-        Icons.logout,
-        () {
-          FirebaseAuth.instance.signOut();
-          myNavigator.toReplacement(SignIn.routeName);
-        },
+      Tooltip(
+        message: '${FirebaseAuth.instance.currentUser!.email}',
+        child: createTextButton(
+          context,
+          'Logout',
+          Icons.logout,
+          () {
+            FirebaseAuth.instance.signOut();
+            myNavigator.toReplacement(SignIn.routeName);
+          },
+        ),
       ),
   ];
 }
@@ -106,7 +109,21 @@ List<Widget> createNavMenus(
 Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
   return Drawer(
     child: ListView(
-      children: navMenus,
+      children: [
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+          ),
+          child: Text(
+            FirebaseAuth.instance.currentUser?.email ?? "Group Loan",
+            style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        ...navMenus,
+      ],
     ),
   );
 }
