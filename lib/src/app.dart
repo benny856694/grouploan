@@ -22,6 +22,12 @@ final myNavigator = RM.injectNavigator(
           routeData.path != Constants.signinRouteName) {
         return routeData.redirectTo(SignIn.routeName);
       }
+
+      if (FirebaseAuth.instance.currentUser != null &&
+          routeData.path == Constants.signinRouteName) {
+        return routeData.redirectTo(Groups.routeName);
+      }
+
       return null;
     });
 
