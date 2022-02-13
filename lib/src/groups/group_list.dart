@@ -15,11 +15,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../helper.dart';
 
-const labelTel = 'Tel.';
-const labelAddGroup = 'Add';
-const labelEditGroup = 'Edit';
-const labelDownloadAsCsv = 'Download as CSV';
-
 class Groups extends StatefulWidget {
   const Groups({Key? key}) : super(key: key);
   static const String routeName = Constants.groupRoute;
@@ -80,7 +75,7 @@ class _GroupsState extends State<Groups> {
         title: Row(
           children: [
             Text(
-              isEdit ? labelEditGroup : labelAddGroup,
+              isEdit ? Constants.labelEditGroup : Constants.labelAddGroup,
             ),
           ],
         ),
@@ -115,7 +110,7 @@ class _GroupsState extends State<Groups> {
                     TextField(
                       controller: phoneNumberEditController,
                       decoration: const InputDecoration(
-                        labelText: labelTel,
+                        labelText: Constants.labelTel,
                       ),
                     ),
                     DateTimePicker(
@@ -260,7 +255,18 @@ class _GroupsState extends State<Groups> {
                 g.id = group.id;
                 appState.groups.crud.update(
                   where: (gp) => gp.id == group.id,
-                  set: (gp) => g,
+                  set: (gp) => gp.copyWith(
+                    name: g.name,
+                    accountNumber: g.accountNumber,
+                    leaderName: g.leaderName,
+                    phoneNumber: g.phoneNumber,
+                    registrationDate: g.registrationDate,
+                    latitude: g.latitude,
+                    longitude: g.longitude,
+                  ),
+                  onResult: (result) {
+                    print('onResult in ui: $result');
+                  },
                 );
               }
               Navigator.of(context).pop();
@@ -533,7 +539,7 @@ class _GroupsState extends State<Groups> {
                     },
                   );
                 },
-                label: const Text(labelAddGroup),
+                label: const Text(Constants.labelAddGroup),
                 icon: const Icon(Icons.add),
               ),
               const SizedBox(
@@ -543,7 +549,7 @@ class _GroupsState extends State<Groups> {
                 onPressed: () {
                   _downloadAsCsv(appState.groups.state);
                 },
-                label: const Text(labelDownloadAsCsv),
+                label: const Text(Constants.labelDownloadAsCsv),
                 icon: const Icon(Icons.download),
               ),
               const SizedBox(
@@ -624,7 +630,7 @@ class _GroupsState extends State<Groups> {
                           ),
                           DataColumn(
                             label: Text(
-                              labelTel,
+                              Constants.labelTel,
                               style: Theme.of(context).textTheme.button,
                             ),
                           ),

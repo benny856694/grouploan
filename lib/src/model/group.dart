@@ -117,7 +117,16 @@ class Group {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Group && other.id == id;
+    return other is Group &&
+        other.id == id &&
+        other.name == name &&
+        other.accountNumber == accountNumber &&
+        other.description == description &&
+        other.phoneNumber == phoneNumber &&
+        other.registrationDate == registrationDate &&
+        other.leaderName == leaderName &&
+        other.latitude == latitude &&
+        other.longitude == longitude;
   }
 
   @override

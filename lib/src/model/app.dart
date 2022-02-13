@@ -4,8 +4,7 @@ import 'package:group_loan/src/model/group_repository.dart';
 import 'package:location/location.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
-
-
+@immutable
 class AppState {
   final groups = RM.injectCRUD<Group, GroupParam>(
     () => GroupRepository(),
@@ -24,10 +23,17 @@ class AppState {
         );
       },
     ),
+    onCRUDSideEffects: OnCRUDSideEffects(
+      onWaiting: null,
+      onError: null,
+      onResult: (result) {
+        print('onResult: $result');
+      },
+    ),
+    debugPrintWhenNotifiedPreMessage: 'groups: ',
   );
 
   final _locator = Location();
-
 
   Future<LocationData?> getLocation() async {
     bool serviceEnabled;

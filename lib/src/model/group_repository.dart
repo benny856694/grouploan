@@ -59,10 +59,11 @@ class GroupRepository implements ICRUD<Group, GroupParam> {
   }
 
   @override
-  Future update(List<Group> items, GroupParam? param) async {
+  Future<dynamic> update(List<Group> items, GroupParam? param) async {
     for (final item in items) {
       await _groupsCollection.doc(item.id).update(item.toMap());
     }
+    return true;
   }
 
   String get nextDocId => _groupsCollection.doc().id;
