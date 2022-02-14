@@ -16,31 +16,50 @@ Widget createTextButton(
   bool isSelected = false,
   bool isDisabled = false,
 }) {
-  return InkWell(
-    onTap: isDisabled ? null : onPressed,
-    child: Container(
-      //color: isSelected ? Theme.of(context).highlightColor : null,
-      padding: const EdgeInsets.all(
-        8.0,
-      ),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            //color: isSelected ? selectedColor : null,
+  return ResponsiveBuilder(
+    builder: (context, sizeConstraints) {
+      if (sizeConstraints.isDesktop) {
+        return InkWell(
+          onTap: isDisabled ? null : onPressed,
+          child: Container(
+            //color: isSelected ? Theme.of(context).highlightColor : null,
+            padding: const EdgeInsets.all(
+              8.0,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  //color: isSelected ? selectedColor : null,
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  text,
+                  style: isSelected
+                      ? const TextStyle(fontWeight: FontWeight.w800)
+                      : null,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(
-            width: 8,
-          ),
-          Text(
-            text,
-            style: isSelected
-                ? const TextStyle(fontWeight: FontWeight.w800)
-                : null,
-          ),
-        ],
-      ),
-    ),
+        );
+      }
+
+      return ListTile(
+        onTap: isDisabled ? null : onPressed,
+        leading: Icon(
+          icon,
+          //color: isSelected ? selectedColor : null,
+        ),
+        title: Text(
+          text,
+          style:
+              isSelected ? const TextStyle(fontWeight: FontWeight.w800) : null,
+        ),
+      );
+    },
   );
 }
 
@@ -188,5 +207,3 @@ AppBar createAppBar(List<Widget> navMenus) {
     ],
   );
 }
-
-

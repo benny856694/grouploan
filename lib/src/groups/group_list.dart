@@ -264,9 +264,6 @@ class _GroupsState extends State<Groups> {
                     latitude: g.latitude,
                     longitude: g.longitude,
                   ),
-                  onResult: (result) {
-                    print('onResult in ui: $result');
-                  },
                 );
               }
               Navigator.of(context).pop();

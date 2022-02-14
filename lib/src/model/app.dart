@@ -23,14 +23,6 @@ class AppState {
         );
       },
     ),
-    onCRUDSideEffects: OnCRUDSideEffects(
-      onWaiting: null,
-      onError: null,
-      onResult: (result) {
-        print('onResult: $result');
-      },
-    ),
-    debugPrintWhenNotifiedPreMessage: 'groups: ',
   );
 
   final _locator = Location();
