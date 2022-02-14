@@ -117,8 +117,8 @@ List<Widget> createNavMenus(
           context,
           'Logout',
           Icons.logout,
-          () {
-            FirebaseAuth.instance.signOut();
+          () async {
+            await FirebaseAuth.instance.signOut();
             myNavigator.toReplacement(SignIn.routeName);
           },
         ),
