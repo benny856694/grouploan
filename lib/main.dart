@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:group_loan/src/model/app.dart';
@@ -12,29 +14,39 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 final appState = AppState();
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  //init firebase
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseCrashlytics.instance
-      .setCrashlyticsCollectionEnabled(!kDebugMode);
-  if (kDebugMode) {
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  }
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    //init firebase
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
+    if (!kDebugMode) {
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    }
 
-  // Set up the SettingsController, which will glue user settings to multiple
-  // Flutter Widgets.
-  final settingsController = SettingsController(SettingsService());
+    // Set up the SettingsController, which will glue user settings to multiple
+    // Flutter Widgets.
+    final settingsController = SettingsController(SettingsService());
 
-  // Load the user's preferred theme while the splash screen is displayed.
-  // This prevents a sudden theme change when the app is first displayed.
-  await settingsController.loadSettings();
+    // Load the user's preferred theme while the splash screen is displayed.
+    // This prevents a sudden theme change when the app is first displayed.
+    await settingsController.loadSettings();
 
-  // Run the app and pass in the SettingsController. The app listens to the
-  // SettingsController for changes, then passes it further down to the
-  // SettingsView.
-  runApp(
-    MyApp(
-      settingsController: settingsController,
-    ),
-  );
+    // Run the app and pass in the SettingsController. The app listens to the
+    // SettingsController for changes, then passes it further down to the
+    // SettingsView.
+    runApp(
+      MyApp(
+        settingsController: settingsController,
+      ),
+    );
+  }, (e, stackTrace) {
+    if (kDebugMode) {
+      print(e);
+      print(stackTrace);
+    } else {
+      FirebaseCrashlytics.instance.recordError(e, stackTrace);
+    }
+  });
 }
