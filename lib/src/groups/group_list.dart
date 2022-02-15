@@ -347,6 +347,7 @@ class _GroupsState extends State<Groups> {
           return _groupListDesktop(context);
         }
       }),
+      extendBodyBehindAppBar: true,
       floatingActionButton: deviceType == DeviceScreenType.mobile
           ? FloatingActionButton(
               onPressed: () {
