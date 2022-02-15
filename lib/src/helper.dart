@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
@@ -108,6 +109,15 @@ List<Widget> createNavMenus(
       'Settings',
       Icons.settings,
       () {},
+      isSelected: selectedButton == 'Settings',
+    ),
+    createTextButton(
+      context,
+      'CrashApp',
+      Icons.error,
+      () {
+        FirebaseCrashlytics.instance.crash();
+      },
       isSelected: selectedButton == 'Settings',
     ),
     if (FirebaseAuth.instance.currentUser != null)

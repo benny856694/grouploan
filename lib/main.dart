@@ -6,6 +6,8 @@ import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 import 'firebase_options.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 final appState = AppState();
 
@@ -13,6 +15,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //init firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(!kDebugMode);
+  if (kDebugMode) {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  }
 
   // Set up the SettingsController, which will glue user settings to multiple
   // Flutter Widgets.
