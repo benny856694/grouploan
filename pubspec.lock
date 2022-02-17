@@ -502,6 +502,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.2.0"
+  statusbarz:
+    dependency: "direct main"
+    description:
+      name: statusbarz
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.6"
   stream_channel:
     dependency: transitive
     description:
