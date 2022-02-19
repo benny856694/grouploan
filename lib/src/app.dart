@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:group_loan/constants.dart';
+import 'package:group_loan/src/auth/authgate.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:statusbarz/statusbarz.dart';
 
-import 'auth/signin.dart';
 import 'groups/group_list.dart';
 import 'settings/settings_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,14 +14,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 final myNavigator = RM.injectNavigator(
     routes: {
       Groups.routeName: (context) => const Groups(),
-      SignIn.routeName: (context) => const SignIn(),
+      AuthGate.routeName: (context) => const AuthGate(),
       Staffs.routeName: (context) => const Staffs(),
     },
-    initialLocation: Constants.signinRouteName,
+    initialLocation: AuthGate.routeName,
     onNavigate: (routeData) {
       if (FirebaseAuth.instance.currentUser == null &&
           routeData.path != Constants.signinRouteName) {
-        return routeData.redirectTo(SignIn.routeName);
+        return routeData.redirectTo(AuthGate.routeName);
       }
 
       if (FirebaseAuth.instance.currentUser != null &&

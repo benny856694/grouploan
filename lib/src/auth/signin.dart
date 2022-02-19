@@ -5,7 +5,7 @@ import 'package:group_loan/src/app.dart';
 import '../groups/group_list.dart';
 
 class SignIn extends StatelessWidget {
-  static const routeName = '/signin';
+  
 
   const SignIn({
     Key? key,
