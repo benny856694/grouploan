@@ -56,13 +56,13 @@ class SignIn extends StatelessWidget {
             ),
           );
         },
-        actions: [
-          AuthStateChangeAction<SignedIn>(
-            (context, _) {
-              myNavigator.toReplacement(Groups.routeName);
-            },
-          ),
-        ],
+        // actions: [
+        //   AuthStateChangeAction<SignedIn>(
+        //     (context, _) {
+        //       myNavigator.toReplacement(Groups.routeName);
+        //     },
+        //   ),
+        // ],
       ),
     );
   }
