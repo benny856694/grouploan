@@ -4,6 +4,7 @@ import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/app.dart';
 import 'package:group_loan/src/auth/authgate.dart';
+import 'package:group_loan/src/auth/signin.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -129,7 +130,7 @@ List<Widget> createNavMenus(
           Icons.logout,
           () async {
             await FirebaseAuth.instance.signOut();
-            myNavigator.toReplacement(AuthGate.routeName);
+            myNavigator.toReplacement(SignIn.routeName);
           },
         ),
       ),
