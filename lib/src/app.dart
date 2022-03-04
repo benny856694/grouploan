@@ -30,7 +30,7 @@ final myNavigator = RM.injectNavigator(
         return routeData.redirectTo(Groups.routeName);
       }
 
-      Statusbarz.instance.refresh();
+      Statusbarz.instance.refresh(delay: const Duration(milliseconds: 300));
       return null;
     });
 
