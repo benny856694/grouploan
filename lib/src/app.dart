@@ -7,7 +7,7 @@ import 'package:group_loan/src/auth/signin.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:statusbarz/statusbarz.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'groups/group_list.dart';
 import 'settings/settings_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,7 +30,9 @@ final myNavigator = RM.injectNavigator(
         return routeData.redirectTo(Groups.routeName);
       }
 
-      Statusbarz.instance.refresh(delay: const Duration(milliseconds: 300));
+      if (!kIsWeb) {
+        Statusbarz.instance.refresh(delay: const Duration(milliseconds: 300));
+      }
       return null;
     });
 
@@ -47,28 +49,31 @@ class MyApp extends StatelessWidget {
     return AnimatedBuilder(
       animation: settingsController,
       builder: (BuildContext context, Widget? child) {
-        return StatusbarzCapturer(
-          child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            restorationScopeId: 'app',
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en', ''),
-            ],
-            onGenerateTitle: (BuildContext context) =>
-                AppLocalizations.of(context)!.appTitle,
-            theme: ThemeData(),
-            darkTheme: ThemeData.dark(),
-            themeMode: settingsController.themeMode,
-            routerDelegate: myNavigator.routerDelegate,
-            routeInformationParser: myNavigator.routeInformationParser,
-          ),
+        final app = MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          restorationScopeId: 'app',
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''),
+          ],
+          onGenerateTitle: (BuildContext context) =>
+              AppLocalizations.of(context)!.appTitle,
+          theme: ThemeData(),
+          darkTheme: ThemeData.dark(),
+          themeMode: settingsController.themeMode,
+          routerDelegate: myNavigator.routerDelegate,
+          routeInformationParser: myNavigator.routeInformationParser,
         );
+        return kIsWeb
+            ? app
+            : StatusbarzCapturer(
+                child: app,
+              );
       },
     );
   }

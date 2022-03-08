@@ -1,5 +1,6 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/app.dart';
@@ -13,7 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 Widget createTextButton(
   BuildContext context,
   String text,
-  IconData icon,
+  Widget icon,
   VoidCallback onPressed, {
   bool isSelected = false,
   bool isDisabled = false,
@@ -23,10 +24,7 @@ Widget createTextButton(
       if (sizeConstraints.isMobile) {
         return ListTile(
           onTap: isDisabled ? null : onPressed,
-          leading: Icon(
-            icon,
-            //color: isSelected ? selectedColor : null,
-          ),
+          leading: icon,
           title: Text(
             text,
             style: isSelected
@@ -45,10 +43,7 @@ Widget createTextButton(
           ),
           child: Row(
             children: [
-              Icon(
-                icon,
-                //color: isSelected ? selectedColor : null,
-              ),
+              icon,
               const SizedBox(
                 width: 8,
               ),
@@ -74,7 +69,7 @@ List<Widget> createNavMenus(
     createTextButton(
       context,
       "Staff",
-      Icons.person,
+      const FaIcon(FontAwesomeIcons.user),
       () {
         myNavigator.toReplacement(Staffs.routeName);
       },
@@ -84,7 +79,7 @@ List<Widget> createNavMenus(
     createTextButton(
       context,
       "Groups",
-      Icons.group,
+      const FaIcon(FontAwesomeIcons.users),
       () {
         myNavigator.toReplacement(Constants.groupRoute);
       },
@@ -94,28 +89,28 @@ List<Widget> createNavMenus(
     createTextButton(
       context,
       'Home',
-      Icons.home,
+      const FaIcon(FontAwesomeIcons.home),
       () {},
       isSelected: selectedButton == 'Home',
     ),
     createTextButton(
       context,
       'Profile',
-      Icons.person,
+      const FaIcon(FontAwesomeIcons.user),
       () {},
       isSelected: selectedButton == 'Profile',
     ),
     createTextButton(
       context,
       'Settings',
-      Icons.settings,
+      const FaIcon(FontAwesomeIcons.cog),
       () {},
       isSelected: selectedButton == 'Settings',
     ),
     createTextButton(
       context,
       'CrashApp',
-      Icons.error,
+      const FaIcon(FontAwesomeIcons.bug),
       () {
         FirebaseCrashlytics.instance.crash();
       },
@@ -127,7 +122,7 @@ List<Widget> createNavMenus(
         child: createTextButton(
           context,
           'Logout',
-          Icons.logout,
+          const FaIcon(FontAwesomeIcons.arrowRight),
           () async {
             await FirebaseAuth.instance.signOut();
             myNavigator.toReplacement(SignIn.routeName);

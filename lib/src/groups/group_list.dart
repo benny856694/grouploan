@@ -5,6 +5,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:download/download.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/model/group.dart';
@@ -347,7 +348,6 @@ class _GroupsState extends State<Groups> {
           return _groupListDesktop(context);
         }
       }),
-      extendBodyBehindAppBar: true,
       floatingActionButton: deviceType == DeviceScreenType.mobile
           ? FloatingActionButton(
               onPressed: () {
@@ -392,11 +392,13 @@ class _GroupsState extends State<Groups> {
                 );
                 var subtitle = <Widget>[];
                 if (group.leaderName?.isNotEmpty == true) {
-                  subtitle.add(Icon(
-                    Icons.person,
-                    size: 16,
-                    color: Theme.of(context).hintColor,
-                  ));
+                  subtitle.add(
+                    FaIcon(
+                      FontAwesomeIcons.user,
+                      color: Theme.of(context).hintColor,
+                      size: 14,
+                    ),
+                  );
                   subtitle.add(const SizedBox(width: 4));
                   subtitle.add(
                     Text(group.leaderName!,
@@ -409,11 +411,13 @@ class _GroupsState extends State<Groups> {
                       width: 8,
                     ),
                   );
-                  subtitle.add(Icon(
-                    Icons.phone,
-                    size: 16,
-                    color: Theme.of(context).hintColor,
-                  ));
+                  subtitle.add(
+                    FaIcon(
+                      FontAwesomeIcons.phone,
+                      color: Theme.of(context).hintColor,
+                      size: 14,
+                    ),
+                  );
                   subtitle.add(const SizedBox(width: 4));
                   subtitle.add(
                     Text(group.phoneNumber!,
@@ -439,11 +443,13 @@ class _GroupsState extends State<Groups> {
                       width: 8,
                     ),
                   );
-                  subtitle2.add(Icon(
-                    Icons.location_on,
-                    size: 16,
-                    color: Theme.of(context).hintColor,
-                  ));
+                  subtitle2.add(
+                    FaIcon(
+                      FontAwesomeIcons.mapMarkerAlt,
+                      color: Theme.of(context).hintColor,
+                      size: 14,
+                    ),
+                  );
                 }
 
                 return InkWell(
@@ -454,21 +460,21 @@ class _GroupsState extends State<Groups> {
                       children: [
                         if (group.latitude != null && group.longitude != null)
                           SlidableAction(
-                            icon: Icons.location_on,
+                            icon: FontAwesomeIcons.mapMarkedAlt,
                             onPressed: (context) async {
                               var url = _getGoogleMapUrl(group);
                               await launch(url);
                             },
                           ),
                         SlidableAction(
-                          icon: Icons.edit,
+                          icon: FontAwesomeIcons.edit,
                           onPressed: (context) {
                             _editGroup(context, group);
                           },
                         ),
                         SlidableAction(
                           foregroundColor: Colors.red,
-                          icon: Icons.delete,
+                          icon: FontAwesomeIcons.trash,
                           onPressed: (context) async {
                             await _confirmDelete(ctx, [group], () {
                               appState.groups.crud
@@ -538,7 +544,10 @@ class _GroupsState extends State<Groups> {
                   );
                 },
                 label: const Text(Constants.labelAddGroup),
-                icon: const Icon(Icons.add),
+                icon: const FaIcon(
+                  FontAwesomeIcons.plus,
+                  size: 16.0,
+                ),
               ),
               const SizedBox(
                 width: 8,
@@ -548,7 +557,10 @@ class _GroupsState extends State<Groups> {
                   _downloadAsCsv(appState.groups.state);
                 },
                 label: const Text(Constants.labelDownloadAsCsv),
-                icon: const Icon(Icons.download),
+                icon: const FaIcon(
+                  FontAwesomeIcons.fileDownload,
+                  size: 16.0,
+                ),
               ),
               const SizedBox(
                 width: 8,
@@ -569,8 +581,9 @@ class _GroupsState extends State<Groups> {
                               Navigator.of(context).pop();
                             });
                           },
-                    icon: const Icon(
-                      Icons.delete,
+                    icon: const FaIcon(
+                      FontAwesomeIcons.trash,
+                      size: 16.0,
                       color: Colors.red,
                     ),
                     label: const Text("Delete"),
@@ -683,7 +696,10 @@ class _GroupsState extends State<Groups> {
                                       if (group.latitude != null &&
                                           group.longitude != null)
                                         IconButton(
-                                          icon: const Icon(Icons.location_pin),
+                                          icon: const FaIcon(
+                                            FontAwesomeIcons.mapMarkerAlt,
+                                            size: 16,
+                                          ),
                                           onPressed: () async {
                                             String url =
                                                 _getGoogleMapUrl(group);
@@ -691,14 +707,18 @@ class _GroupsState extends State<Groups> {
                                           },
                                         ),
                                       IconButton(
-                                        icon: const Icon(Icons.edit),
+                                        icon: const FaIcon(
+                                          FontAwesomeIcons.edit,
+                                          size: 16,
+                                        ),
                                         onPressed: () {
                                           _editGroup(context, group);
                                         },
                                       ),
                                       IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
+                                        icon: const FaIcon(
+                                          FontAwesomeIcons.trash,
+                                          size: 16,
                                           color: Colors.red,
                                         ),
                                         onPressed: () {

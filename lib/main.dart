@@ -9,7 +9,7 @@ import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 import 'firebase_options.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 
 final appState = AppState();
 
@@ -19,10 +19,15 @@ void main() async {
     //init firebase
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(!kDebugMode);
-    if (!kDebugMode) {
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    if (!kIsWeb) {
+      if (kDebugMode) {
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(false);
+      } else {
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(true);
+        FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+      }
     }
 
     // Set up the SettingsController, which will glue user settings to multiple
