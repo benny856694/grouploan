@@ -21,18 +21,23 @@ class SignIn extends StatelessWidget {
         showAuthActionSwitch: false,
         headerBuilder: (context, constraints, _) {
           return Padding(
-            padding: const EdgeInsets.all(20),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Image.asset(
-                'assets/images/logo.jpeg',
+            padding: const EdgeInsets.only(top: 32),
+            child: Center(
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/logo.jpeg',
+                ),
               ),
             ),
           );
         },
         sideBuilder: (context, constraints) {
-          return Image.asset(
-            'assets/images/logo.jpeg',
+          return Center(
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/logo.jpeg',
+              ),
+            ),
           );
         },
         subtitleBuilder: (context, action) {
