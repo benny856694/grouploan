@@ -5,9 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "grouploan-web",
+            "request": "launch",
+            "type": "dart",
+            "args": ["-d", "edge","--web-port", "8000"],
+        },
+        {
             "name": "grouploan",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
         },
         {
             "name": "grouploan (profile mode)",
