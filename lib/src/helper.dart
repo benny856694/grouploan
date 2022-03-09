@@ -175,6 +175,14 @@ Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
 AppBar createAppBar(List<Widget> navMenus) {
   return AppBar(
     automaticallyImplyLeading: !kIsWeb,
+    leading: kIsWeb
+        ? const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/logo.jpeg'),
+            ),
+          )
+        : null,
     title: Row(
       children: [
         const Text('Group Loan'),
