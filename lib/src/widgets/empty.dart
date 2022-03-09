@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EmptyIndiator extends StatelessWidget {
   const EmptyIndiator({
@@ -12,7 +13,7 @@ class EmptyIndiator extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: const <Widget>[
           Icon(
-            Icons.error_outline,
+            FontAwesomeIcons.inbox,
             size: 80,
             color: Colors.grey,
           ),

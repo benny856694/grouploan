@@ -1,4 +1,5 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:group_loan/constants.dart';
@@ -173,7 +174,7 @@ Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
 
 AppBar createAppBar(List<Widget> navMenus) {
   return AppBar(
-    //leading: const Icon(Icons.money),
+    automaticallyImplyLeading: !kIsWeb,
     title: Row(
       children: [
         const Text('Group Loan'),
