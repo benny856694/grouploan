@@ -31,14 +31,8 @@ class SignIn extends StatelessWidget {
           );
         },
         sideBuilder: (context, constraints) {
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Image.asset(
-                'assets/images/logo.jpeg',
-              ),
-            ),
+          return Image.asset(
+            'assets/images/logo.jpeg',
           );
         },
         subtitleBuilder: (context, action) {
