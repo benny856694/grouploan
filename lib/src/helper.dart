@@ -72,7 +72,7 @@ List<Widget> createNavMenus(
       "Staff",
       const FaIcon(FontAwesomeIcons.user),
       () {
-        myNavigator.toReplacement(Staffs.routeName);
+        myNavigator.toAndRemoveUntil(Staffs.routeName);
       },
       isSelected: selectedButton == 'Staff',
       isDisabled: myNavigator.routeData.path == Staffs.routeName,
@@ -82,7 +82,7 @@ List<Widget> createNavMenus(
       "Groups",
       const FaIcon(FontAwesomeIcons.users),
       () {
-        myNavigator.toReplacement(Constants.groupRoute);
+        myNavigator.toAndRemoveUntil(Constants.groupRoute);
       },
       isSelected: selectedButton == 'Groups',
       isDisabled: myNavigator.routeData.path == Constants.groupRoute,
