@@ -152,7 +152,7 @@ class _GroupsState extends State<Groups> {
                         //icon button to get location
                         if (!_isGettingLocation)
                           IconButton(
-                            icon: const Icon(Icons.my_location),
+                            icon: const Icon(FontAwesomeIcons.locationArrow),
                             onPressed: () async {
                               setState(() {
                                 _isGettingLocation = true;
@@ -190,7 +190,7 @@ class _GroupsState extends State<Groups> {
                         //icon button to show in map
                         if (longitudeEditController.text.isNotEmpty)
                           IconButton(
-                            icon: const Icon(Icons.location_pin),
+                            icon: const Icon(FontAwesomeIcons.mapMarked),
                             onPressed: () async {
                               var url =
                                   'https://www.google.com/maps/search/?api=1&query=${latitudeEditController.text},${longitudeEditController.text}';
@@ -697,7 +697,7 @@ class _GroupsState extends State<Groups> {
                                           group.longitude != null)
                                         IconButton(
                                           icon: const FaIcon(
-                                            FontAwesomeIcons.mapMarkerAlt,
+                                            FontAwesomeIcons.mapMarkedAlt,
                                             size: 16,
                                           ),
                                           onPressed: () async {
