@@ -190,7 +190,7 @@ class _GroupsState extends State<Groups> {
                         //icon button to show in map
                         if (longitudeEditController.text.isNotEmpty)
                           IconButton(
-                            icon: const Icon(FontAwesomeIcons.mapMarked),
+                            icon: const Icon(FontAwesomeIcons.mapMarkedAlt),
                             onPressed: () async {
                               var url =
                                   'https://www.google.com/maps/search/?api=1&query=${latitudeEditController.text},${longitudeEditController.text}';
