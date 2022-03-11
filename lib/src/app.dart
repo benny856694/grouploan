@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/src/auth/authgate.dart';
 import 'package:group_loan/src/auth/signin.dart';
+import 'package:group_loan/src/layout/web_home.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:statusbarz/statusbarz.dart';
@@ -14,11 +15,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 final myNavigator = RM.injectNavigator(
     routes: {
-      Groups.routeName: (context) => const Groups(),
       SignIn.routeName: (context) => const SignIn(),
-      Staffs.routeName: (context) => const Staffs(),
+      '/': (context) => RouteWidget(
+            builder: (context) => const WebHome(),
+            routes: {
+              '/': (context) => context.redirectTo(Groups.routeName),
+              Groups.routeName: (context) => const Groups(),
+              Staffs.routeName: (context) => const Staffs(),
+            },
+          ),
     },
     initialLocation: SignIn.routeName,
+    //builder: kIsWeb ? (_) => const WebHome() : null,
     onNavigate: (routeData) {
       if (FirebaseAuth.instance.currentUser == null &&
           routeData.path != Constants.signinRouteName) {

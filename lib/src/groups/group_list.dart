@@ -337,10 +337,10 @@ class _GroupsState extends State<Groups> {
     var deviceType = getDeviceType(MediaQuery.of(context).size);
     var navMenu = createNavMenus(context, selectedButton: Constants.groups);
     return Scaffold(
-      appBar: createAppBar(navMenu),
-      drawer: deviceType == DeviceScreenType.mobile
-          ? createEndDrawer(navMenu, context)
-          : null,
+      // appBar: createAppBar(navMenu),
+      // drawer: deviceType == DeviceScreenType.mobile
+      //     ? createEndDrawer(navMenu, context)
+      //     : null,
       body: ResponsiveBuilder(builder: (context, size) {
         if (size.isMobile) {
           return _groupListMobile(context);
