@@ -6,19 +6,10 @@ class Staffs extends StatelessWidget {
 
   const Staffs({Key? key}) : super(key: key);
 
-  Widget buildMainContent(BuildContext context) {
-    return const Text("Staff Screen");
-  }
-
-  List<Widget> buildNavMenus(BuildContext context) => createNavMenus(
-        context,
-        selectedButton: "Staff",
-      );
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: buildMainContent(context),
+    return const Center(
+      child: Text('Staffs'),
     );
   }
 }
