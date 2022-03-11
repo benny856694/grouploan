@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 import 'helper.dart';
 
@@ -16,7 +17,7 @@ abstract class Layout extends StatelessWidget {
     var navMenus = buildNavMenus(context);
     var mainContent = buildMainContent(context);
     return Scaffold(
-      appBar: createAppBar(navMenus),
+      appBar: createAppBar(DeviceScreenType.desktop, navMenus),
       endDrawer: createEndDrawer(navMenus, context),
       body: Container(
         alignment: Alignment.topCenter,
@@ -26,6 +27,4 @@ abstract class Layout extends StatelessWidget {
       floatingActionButton: buildFloatingActionButton(context),
     );
   }
-
-  
 }

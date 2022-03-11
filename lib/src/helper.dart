@@ -74,7 +74,7 @@ List<Widget> createNavMenus(
       () {
         myNavigator.toAndRemoveUntil(Staffs.routeName);
       },
-      isSelected: selectedButton == 'Staff',
+      isSelected: myNavigator.routeData.location.startsWith(Staffs.routeName),
       isDisabled: myNavigator.routeData.path == Staffs.routeName,
     ),
     createTextButton(
@@ -84,7 +84,8 @@ List<Widget> createNavMenus(
       () {
         myNavigator.toAndRemoveUntil(Constants.groupRoute);
       },
-      isSelected: selectedButton == 'Groups',
+      isSelected:
+          myNavigator.routeData.location.startsWith(Constants.groupRoute),
       isDisabled: myNavigator.routeData.path == Constants.groupRoute,
     ),
     createTextButton(
@@ -172,10 +173,10 @@ Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
   );
 }
 
-AppBar createAppBar(List<Widget> navMenus) {
+AppBar createAppBar(DeviceScreenType deviceScreenType, List<Widget> navMenus) {
   return AppBar(
-    automaticallyImplyLeading: !kIsWeb,
-    leading: kIsWeb
+    automaticallyImplyLeading: deviceScreenType == DeviceScreenType.mobile,
+    leading: deviceScreenType == DeviceScreenType.desktop
         ? const Padding(
             padding: EdgeInsets.all(8.0),
             child: CircleAvatar(
