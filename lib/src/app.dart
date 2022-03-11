@@ -26,7 +26,7 @@ final myNavigator = RM.injectNavigator(
           ),
     },
     initialLocation: SignIn.routeName,
-    //builder: kIsWeb ? (_) => const WebHome() : null,
+    transitionsBuilder: RM.transitions.none(),
     onNavigate: (routeData) {
       if (FirebaseAuth.instance.currentUser == null &&
           routeData.path != Constants.signinRouteName) {

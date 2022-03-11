@@ -8,6 +8,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
+import 'package:group_loan/src/app.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:group_loan/src/widgets/empty.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -267,14 +268,14 @@ class _GroupsState extends State<Groups> {
                   ),
                 );
               }
-              Navigator.of(context).pop();
+              myNavigator.back();
             },
           ),
           if (isEdit)
             TextButton(
               child: const Text('Cancel'),
               onPressed: () {
-                Navigator.of(context).pop();
+                myNavigator.back();
               },
             ),
         ],
@@ -578,7 +579,7 @@ class _GroupsState extends State<Groups> {
                                 where: (gp) => selectedGroup.state.contains(gp),
                               );
                               selectedGroup.setState((s) => <Group>[]);
-                              Navigator.of(context).pop();
+                              myNavigator.back();
                             });
                           },
                     icon: const FaIcon(
@@ -732,7 +733,7 @@ class _GroupsState extends State<Groups> {
                                                       element.id != group.id)
                                                   .toList(),
                                             );
-                                            Navigator.of(context).pop();
+                                            myNavigator.back();
                                           });
                                         },
                                       ),
@@ -777,31 +778,26 @@ class _GroupsState extends State<Groups> {
     List<Group> groups,
     void Function()? onConfirm,
   ) {
-    return showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: const Text('Delete Group'),
-          content: Text(
-            groups.length == 1
-                ? 'Are you sure you want to delete this group: "${groups.first.name}"?'
-                : 'Are you sure you want to delete these groups?',
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Delete'),
-              onPressed: onConfirm,
-            ),
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    return RM.navigate.toDialog(AlertDialog(
+      title: const Text('Delete Group'),
+      content: Text(
+        groups.length == 1
+            ? 'Are you sure you want to delete this group: "${groups.first.name}"?'
+            : 'Are you sure you want to delete these groups?',
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Delete'),
+          onPressed: onConfirm,
+        ),
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () {
+            myNavigator.back();
+          },
+        ),
+      ],
+    ));
   }
 
   void _downloadAsCsv(List<Group> state) {
