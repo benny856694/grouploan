@@ -23,7 +23,7 @@ class NavLink extends StatelessWidget {
         style: TextStyle(
           color: Colors.white,
           fontWeight: isActive ? FontWeight.bold : null,
-          decoration: isActive ? TextDecoration.underline : null,
+          //decoration: isActive ? TextDecoration.underline : null,
         ),
       ),
     );
