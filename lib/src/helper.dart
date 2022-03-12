@@ -176,6 +176,7 @@ Drawer createEndDrawer(List<Widget> navMenus, BuildContext context) {
 AppBar createAppBar(DeviceScreenType deviceScreenType, List<Widget> navMenus) {
   return AppBar(
     automaticallyImplyLeading: deviceScreenType == DeviceScreenType.mobile,
+    elevation: deviceScreenType == DeviceScreenType.mobile ? null : 0.0,
     leading: deviceScreenType == DeviceScreenType.desktop
         ? const Padding(
             padding: EdgeInsets.all(8.0),
