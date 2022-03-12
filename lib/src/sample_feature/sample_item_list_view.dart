@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../settings/settings_view.dart';
 import 'sample_item.dart';
@@ -22,7 +23,7 @@ class SampleItemListView extends StatelessWidget {
         title: const Text('Sample Items'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const FaIcon(FontAwesomeIcons.cog),
             onPressed: () {
               // Navigate to the settings page. If the user leaves and returns
               // to the app after it has been killed while running in the

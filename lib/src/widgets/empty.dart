@@ -12,7 +12,7 @@ class EmptyIndiator extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const <Widget>[
-          Icon(
+          FaIcon(
             FontAwesomeIcons.inbox,
             size: 80,
             color: Colors.grey,

@@ -1,5 +1,6 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:group_loan/constants.dart';
 
@@ -13,8 +14,6 @@ class GroupEdit extends StatelessWidget {
   final Group? group;
   final bool _isEdit;
   final void Function(Group)? onSave;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +92,7 @@ class GroupEdit extends StatelessWidget {
             //icon button to get location
             if (false) // (!_isGettingLocation)
               IconButton(
-                icon: const Icon(Icons.my_location),
+                icon: const FaIcon(FontAwesomeIcons.locationArrow),
                 onPressed: () async {
                   // setState(() {
                   //   _isGettingLocation = true;
@@ -131,7 +130,7 @@ class GroupEdit extends StatelessWidget {
             //icon button to show in map
             if (longitudeEditController.text.isNotEmpty)
               IconButton(
-                icon: const Icon(Icons.location_pin),
+                icon: const FaIcon(FontAwesomeIcons.locationArrow),
                 onPressed: () async {
                   var url =
                       'https://www.google.com/maps/search/?api=1&query=${latitudeEditController.text},${longitudeEditController.text}';
