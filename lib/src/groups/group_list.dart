@@ -231,7 +231,7 @@ class _GroupsState extends State<Groups> {
                   group,
                 );
                 if (!appState.groups.hasError) {
-                  Navigator.pop(context);
+                  myNavigator.back();
                 }
               },
             ),
@@ -352,12 +352,8 @@ class _GroupsState extends State<Groups> {
       floatingActionButton: deviceType == DeviceScreenType.mobile
           ? FloatingActionButton(
               onPressed: () {
-                showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (_) {
-                    return _buildGroupDialog(context);
-                  },
+                RM.navigate.toDialog(
+                  _buildGroupDialog(context),
                 );
               },
               child: const FaIcon(FontAwesomeIcons.plus),
@@ -480,7 +476,7 @@ class _GroupsState extends State<Groups> {
                             await _confirmDelete(ctx, [group], () {
                               appState.groups.crud
                                   .delete(where: (gp) => gp.id == group.id);
-                              Navigator.of(ctx).pop();
+                              myNavigator.back();
                               RM.scaffold.showSnackBar(SnackBar(
                                 content: Text('Group "${group.name}" deleted'),
                               ));
@@ -536,12 +532,8 @@ class _GroupsState extends State<Groups> {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (_) {
-                      return _buildGroupDialog(context);
-                    },
+                  RM.navigate.toDialog(
+                    _buildGroupDialog(context),
                   );
                 },
                 label: const Text(Constants.labelAddGroup),
@@ -762,14 +754,11 @@ class _GroupsState extends State<Groups> {
   }
 
   Future<dynamic> _editGroup(BuildContext context, Group group) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return _buildGroupDialog(
-          context,
-          group: group,
-        );
-      },
+    return RM.navigate.toDialog(
+      _buildGroupDialog(
+        context,
+        group: group,
+      ),
     );
   }
 
