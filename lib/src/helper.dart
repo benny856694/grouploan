@@ -72,7 +72,7 @@ List<Widget> createNavMenus(
       "Staff",
       const FaIcon(FontAwesomeIcons.user),
       () {
-        myNavigator.toAndRemoveUntil(Staffs.routeName);
+        myNavigator.toReplacement(Staffs.routeName);
       },
       isSelected: myNavigator.routeData.location.startsWith(Staffs.routeName),
       isDisabled: myNavigator.routeData.path == Staffs.routeName,
@@ -82,7 +82,7 @@ List<Widget> createNavMenus(
       "Groups",
       const FaIcon(FontAwesomeIcons.users),
       () {
-        myNavigator.toAndRemoveUntil(Constants.groupRoute);
+        myNavigator.toReplacement(Constants.groupRoute);
       },
       isSelected:
           myNavigator.routeData.location.startsWith(Constants.groupRoute),
