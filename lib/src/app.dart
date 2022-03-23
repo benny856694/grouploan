@@ -13,7 +13,7 @@ import 'groups/group_list.dart';
 import 'settings/settings_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-int? lastBackPressTime;
+int lastBackPressTime = 0;
 
 final myNavigator = RM.injectNavigator(
   routes: {
@@ -47,26 +47,16 @@ final myNavigator = RM.injectNavigator(
   },
   onNavigateBack: (routeData) {
     if (routeData == null) {
-      void showSnackbar() {
+      if (DateTime.now().millisecondsSinceEpoch - lastBackPressTime > 2000) {
+        lastBackPressTime = DateTime.now().millisecondsSinceEpoch;
         RM.scaffold.showSnackBar(
           const SnackBar(
             content: Text('Press back again to exit'),
           ),
         );
-      }
-
-      if (lastBackPressTime == null) {
-        lastBackPressTime = DateTime.now().millisecondsSinceEpoch;
-        showSnackbar();
         return false;
       } else {
-        if (DateTime.now().millisecondsSinceEpoch - lastBackPressTime! > 2000) {
-          lastBackPressTime = DateTime.now().millisecondsSinceEpoch;
-          showSnackbar();
-          return false;
-        } else {
-          return true;
-        }
+        return true;
       }
     }
     return true;
