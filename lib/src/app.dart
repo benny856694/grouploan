@@ -13,36 +13,65 @@ import 'groups/group_list.dart';
 import 'settings/settings_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+int? lastBackPressTime;
+
 final myNavigator = RM.injectNavigator(
-    routes: {
-      SignIn.routeName: (context) => const SignIn(),
-      '/': (context) => RouteWidget(
-            builder: (context) => const WebHome(),
-            routes: {
-              '/': (context) => context.redirectTo(Groups.routeName),
-              Groups.routeName: (context) => const Groups(),
-              Staffs.routeName: (context) => const Staffs(),
-            },
+  routes: {
+    SignIn.routeName: (context) => const SignIn(),
+    '/': (context) => RouteWidget(
+          builder: (context) => const WebHome(),
+          routes: {
+            '/': (context) => context.redirectTo(Groups.routeName),
+            Groups.routeName: (context) => const Groups(),
+            Staffs.routeName: (context) => const Staffs(),
+          },
+        ),
+  },
+  initialLocation: SignIn.routeName,
+  transitionsBuilder: RM.transitions.none(),
+  onNavigate: (routeData) {
+    if (FirebaseAuth.instance.currentUser == null &&
+        routeData.path != Constants.signinRouteName) {
+      return routeData.redirectTo(SignIn.routeName);
+    }
+
+    if (FirebaseAuth.instance.currentUser != null &&
+        routeData.path == Constants.signinRouteName) {
+      return routeData.redirectTo(Groups.routeName);
+    }
+
+    if (!kIsWeb) {
+      Statusbarz.instance.refresh(delay: const Duration(milliseconds: 300));
+    }
+    return null;
+  },
+  onNavigateBack: (routeData) {
+    if (routeData == null) {
+      void showSnackbar() {
+        RM.scaffold.showSnackBar(
+          const SnackBar(
+            content: Text('Press back again to exit'),
           ),
-    },
-    initialLocation: SignIn.routeName,
-    transitionsBuilder: RM.transitions.none(),
-    onNavigate: (routeData) {
-      if (FirebaseAuth.instance.currentUser == null &&
-          routeData.path != Constants.signinRouteName) {
-        return routeData.redirectTo(SignIn.routeName);
+        );
       }
 
-      if (FirebaseAuth.instance.currentUser != null &&
-          routeData.path == Constants.signinRouteName) {
-        return routeData.redirectTo(Groups.routeName);
+      if (lastBackPressTime == null) {
+        lastBackPressTime = DateTime.now().millisecondsSinceEpoch;
+        showSnackbar();
+        return false;
+      } else {
+        if (DateTime.now().millisecondsSinceEpoch - lastBackPressTime! > 2000) {
+          lastBackPressTime = DateTime.now().millisecondsSinceEpoch;
+          showSnackbar();
+          return false;
+        } else {
+          return true;
+        }
       }
-
-      if (!kIsWeb) {
-        Statusbarz.instance.refresh(delay: const Duration(milliseconds: 300));
-      }
-      return null;
-    });
+    }
+    return true;
+  },
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({
