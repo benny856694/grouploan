@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:group_loan/constants.dart';
+import 'package:group_loan/main.dart';
 import 'package:group_loan/src/auth/authgate.dart';
 import 'package:group_loan/src/auth/signin.dart';
+import 'package:group_loan/src/groups/group_edit_page.dart';
 import 'package:group_loan/src/layout/web_home.dart';
+import 'package:group_loan/src/model/group.dart';
+import 'package:group_loan/src/model/group_repository.dart';
 import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:statusbarz/statusbarz.dart';
@@ -12,12 +16,21 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'groups/group_list.dart';
 import 'settings/settings_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:collection/collection.dart';
 
 int lastBackPressTime = 0;
 
 final myNavigator = RM.injectNavigator(
   routes: {
     SignIn.routeName: (context) => const SignIn(),
+    GroupEditPage.routeName: (context) {
+      final groupId = context.pathParams['id'];
+      Group? group =
+          appState.groups.state.firstWhereOrNull((g) => g.id == groupId);
+      return GroupEditPage(
+        group: group,
+      );
+    },
     '/': (context) => RouteWidget(
           builder: (context) => const WebHome(),
           routes: {

@@ -9,8 +9,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/main.dart';
 import 'package:group_loan/src/app.dart';
+import 'package:group_loan/src/groups/group_edit_page.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:group_loan/src/widgets/empty.dart';
+import 'package:group_loan/src/widgets/group.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -352,9 +354,7 @@ class _GroupsState extends State<Groups> {
       floatingActionButton: deviceType == DeviceScreenType.mobile
           ? FloatingActionButton(
               onPressed: () {
-                RM.navigate.toDialog(
-                  _buildGroupDialog(context),
-                );
+                myNavigator.to('/groupEdit/-1');
               },
               child: const FaIcon(FontAwesomeIcons.plus),
             )
@@ -466,7 +466,10 @@ class _GroupsState extends State<Groups> {
                         SlidableAction(
                           icon: FontAwesomeIcons.edit,
                           onPressed: (context) {
-                            _editGroup(context, group);
+                            final id = group.id;
+                            myNavigator.to(
+                              '/groupEdit/$id',
+                            );
                           },
                         ),
                         SlidableAction(
@@ -533,7 +536,15 @@ class _GroupsState extends State<Groups> {
               ElevatedButton.icon(
                 onPressed: () {
                   RM.navigate.toDialog(
-                    _buildGroupDialog(context),
+                    AlertDialog(
+                      title: const Text('Add Group'),
+                      content: Builder(builder: (context) {
+                        return const SizedBox(
+                          width: 400,
+                          child: GroupEdit(),
+                        );
+                      }),
+                    ),
                   );
                 },
                 label: const Text(Constants.labelAddGroup),
@@ -705,7 +716,20 @@ class _GroupsState extends State<Groups> {
                                           size: 16,
                                         ),
                                         onPressed: () {
-                                          _editGroup(context, group);
+                                          RM.navigate.toDialog(
+                                            AlertDialog(
+                                              title: const Text('Edit Group'),
+                                              content:
+                                                  Builder(builder: (context) {
+                                                return SizedBox(
+                                                  width: 400,
+                                                  child: GroupEdit(
+                                                    group: group,
+                                                  ),
+                                                );
+                                              }),
+                                            ),
+                                          );
                                         },
                                       ),
                                       IconButton(
