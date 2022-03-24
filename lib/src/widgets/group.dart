@@ -1,12 +1,15 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:group_loan/src/app.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:group_loan/constants.dart';
+import 'package:group_loan/src/model/group_repository.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
+import '../model/app.dart';
 
 class GroupEdit extends StatelessWidget {
   const GroupEdit({
@@ -28,9 +31,24 @@ class GroupEdit extends StatelessWidget {
         RM.injectTextEditing(text: group?.longitude?.toString() ?? '');
     final latitudeEditController =
         RM.injectTextEditing(text: group?.latitude?.toString() ?? '');
+    DateTime? registrationDate = DateTime.now();
+
+    Group _getGroup() {
+      return Group(
+        id: group?.id ?? appState.groups.getRepoAs<GroupRepository>().nextDocId,
+        name: nameEditController.text,
+        phoneNumber: phoneNumberEditController.text,
+        leaderName: leaderNameEditController.text,
+        accountNumber: accountNumberEditController.text,
+        longitude: double.tryParse(longitudeEditController.text) ?? 0.0,
+        latitude: double.tryParse(latitudeEditController.text) ?? 0.0,
+        registrationDate: registrationDate,
+      );
+    }
+
     final form = RM.injectForm();
     final _isRequestingLocation = false.inj();
-    DateTime? registrationDate = DateTime.now();
+
     var nameFocusNode = FocusNode();
     return OnFormBuilder(
       listenTo: form,
@@ -158,9 +176,25 @@ class GroupEdit extends StatelessWidget {
                   onSubmitting: () => const CircularProgressIndicator(),
                   child: group == null
                       ? ElevatedButton(
-                          onPressed: () {}, child: const Text('Create'))
+                          onPressed: () async {
+                            final gp = _getGroup();
+                            await appState.groups.crud.create(gp);
+                            myNavigator.back();
+                          },
+                          child: const Text('Create'),
+                        )
                       : ElevatedButton(
-                          onPressed: () {}, child: const Text('OK')),
+                          onPressed: () {
+                            form.submit(() async {
+                              final gp = _getGroup();
+                              await appState.groups.crud.update(
+                                  where: (g) => g.id == group!.id,
+                                  set: (g) => gp);
+                              myNavigator.back();
+                            });
+                          },
+                          child: const Text('OK'),
+                        ),
                 ),
               ),
               const SizedBox(
@@ -173,11 +207,15 @@ class GroupEdit extends StatelessWidget {
                   child: group == null
                       ? ElevatedButton(
                           child: const Text('Create & More'),
-                          onPressed: () {
-                            form.submit();
+                          onPressed: () async {
+                            final gp = _getGroup();
+                            await appState.groups.crud.create(gp);
                           })
                       : ElevatedButton(
-                          child: const Text('Canel'), onPressed: () {}),
+                          child: const Text('Canel'),
+                          onPressed: () {
+                            myNavigator.back();
+                          }),
                 ),
               ),
             ],
