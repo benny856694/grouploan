@@ -31,7 +31,8 @@ class GroupEdit extends StatelessWidget {
         RM.injectTextEditing(text: group?.longitude?.toString() ?? '');
     final latitudeEditController =
         RM.injectTextEditing(text: group?.latitude?.toString() ?? '');
-    DateTime? registrationDate = DateTime.now();
+    final registrationDate =
+        RM.injectFormField<DateTime>(group?.registrationDate ?? DateTime.now());
 
     Group _getGroup() {
       return Group(
@@ -42,7 +43,7 @@ class GroupEdit extends StatelessWidget {
         accountNumber: accountNumberEditController.text,
         longitude: double.tryParse(longitudeEditController.text),
         latitude: double.tryParse(latitudeEditController.text),
-        registrationDate: registrationDate,
+        registrationDate: registrationDate.value,
       );
     }
 
@@ -150,19 +151,24 @@ class GroupEdit extends StatelessWidget {
                 ),
             ],
           ),
-          DateTimePicker(
-            type: DateTimePickerType.date,
-            initialValue: registrationDate.toString(),
-            firstDate: DateTime(2000),
-            lastDate: DateTime(2100),
-            dateLabelText: 'Registration Date',
-            timeLabelText: "Hour",
-            onChanged: (value) {
-              registrationDate = DateTime.parse(value);
-            },
-            onSaved: (val) {
-              registrationDate = DateTime.parse(val!);
-            },
+          OnReactive(
+            () => OnFormFieldBuilder<DateTime>(
+              listenTo: registrationDate,
+              builder: (value, onChanged) {
+                return DateTimePicker(
+                  key: ValueKey(value),
+                  type: DateTimePickerType.date,
+                  initialValue: value.toString(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                  dateLabelText: 'Registration Date',
+                  timeLabelText: "Hour",
+                  onChanged: (s) {
+                    onChanged(DateTime.parse(s));
+                  },
+                );
+              },
+            ),
           ),
           const SizedBox(
             height: 16,
@@ -210,6 +216,9 @@ class GroupEdit extends StatelessWidget {
                           onPressed: () async {
                             final gp = _getGroup();
                             await appState.groups.crud.create(gp);
+                            form.reset();
+                            registrationDate.value =
+                                gp.registrationDate ?? DateTime.now();
                           })
                       : ElevatedButton(
                           child: const Text('Canel'),
@@ -218,6 +227,19 @@ class GroupEdit extends StatelessWidget {
                           }),
                 ),
               ),
+              if (group == null) ...[
+                const SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    child: const Text('Cancel'),
+                    onPressed: () async {
+                      myNavigator.back();
+                    },
+                  ),
+                ),
+              ],
             ],
           )
         ],
