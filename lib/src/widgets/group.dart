@@ -40,8 +40,8 @@ class GroupEdit extends StatelessWidget {
         phoneNumber: phoneNumberEditController.text,
         leaderName: leaderNameEditController.text,
         accountNumber: accountNumberEditController.text,
-        longitude: double.tryParse(longitudeEditController.text) ?? 0.0,
-        latitude: double.tryParse(latitudeEditController.text) ?? 0.0,
+        longitude: double.tryParse(longitudeEditController.text),
+        latitude: double.tryParse(latitudeEditController.text),
         registrationDate: registrationDate,
       );
     }
