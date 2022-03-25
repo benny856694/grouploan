@@ -2,6 +2,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:group_loan/src/app.dart';
+import 'package:group_loan/src/helper.dart';
 import 'package:group_loan/src/model/group.dart';
 import 'package:group_loan/constants.dart';
 import 'package:group_loan/src/model/group_repository.dart';
@@ -151,27 +152,26 @@ class GroupEdit extends StatelessWidget {
                 ),
             ],
           ),
-          OnReactive(
-            () => OnFormFieldBuilder<DateTime>(
-              listenTo: registrationDate,
-              builder: (value, onChanged) {
-                return DateTimePicker(
-                  key: ValueKey(value),
-                  type: DateTimePickerType.date,
-                  initialValue: value.toString(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                  dateLabelText: 'Registration Date',
-                  timeLabelText: "Hour",
-                  onChanged: (s) {
-                    onChanged(DateTime.parse(s));
-                  },
-                );
-              },
-            ),
+          OnFormFieldBuilder<DateTime>(
+            listenTo: registrationDate,
+            builder: (value, onChanged) {
+              value.log();
+              return DateTimePicker(
+                key: ValueKey(value),
+                type: DateTimePickerType.date,
+                initialValue: value.toString(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+                dateLabelText: 'Registration Date',
+                timeLabelText: "Hour",
+                onChanged: (s) {
+                  onChanged(DateTime.parse(s));
+                },
+              );
+            },
           ),
           const SizedBox(
-            height: 16,
+            height: 32,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

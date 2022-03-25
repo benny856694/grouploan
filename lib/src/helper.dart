@@ -11,6 +11,7 @@ import 'package:group_loan/src/staffs/staffs.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer' as DevTools;
 
 Widget createTextButton(
   BuildContext context,
@@ -225,4 +226,10 @@ AppBar createAppBar(DeviceScreenType deviceScreenType, List<Widget> navMenus) {
       ),
     ],
   );
+}
+
+extension Log on Object {
+  void log() {
+    DevTools.log(toString());
+  }
 }
