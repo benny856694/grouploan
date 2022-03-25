@@ -103,7 +103,9 @@ class MyApp extends StatelessWidget {
           ],
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
-          theme: ThemeData(),
+          theme: ThemeData(
+            primarySwatch: Colors.teal,
+          ),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
           routerDelegate: myNavigator.routerDelegate,
