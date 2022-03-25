@@ -187,7 +187,7 @@ class GroupEdit extends StatelessWidget {
                             await appState.groups.crud.create(gp);
                             myNavigator.back();
                           },
-                          child: const Text('Create'),
+                          child: const Text('Add'),
                         )
                       : ElevatedButton(
                           onPressed: () {
@@ -212,7 +212,7 @@ class GroupEdit extends StatelessWidget {
                   onSubmitting: () => const CircularProgressIndicator(),
                   child: group == null
                       ? ElevatedButton(
-                          child: const Text('Create & More'),
+                          child: const Text('Add & More'),
                           onPressed: () async {
                             final gp = _getGroup();
                             await appState.groups.crud.create(gp);
