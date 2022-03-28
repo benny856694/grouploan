@@ -30,6 +30,7 @@ dependencies:
   firebase_crashlytics: ^2.5.1
   statusbarz: ^1.0.6
   font_awesome_flutter: ^9.2.0
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:

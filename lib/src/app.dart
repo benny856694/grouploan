@@ -17,6 +17,7 @@ import 'groups/group_list.dart';
 import 'settings/settings_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:collection/collection.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 int lastBackPressTime = 0;
 
@@ -62,11 +63,12 @@ final myNavigator = RM.injectNavigator(
     if (routeData == null) {
       if (DateTime.now().millisecondsSinceEpoch - lastBackPressTime > 2000) {
         lastBackPressTime = DateTime.now().millisecondsSinceEpoch;
-        RM.scaffold.showSnackBar(
-          const SnackBar(
-            content: Text('Press back again to exit'),
-          ),
+        Fluttertoast.showToast(
+          msg: 'Press back again to exit',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
         );
+
         return false;
       } else {
         return true;
